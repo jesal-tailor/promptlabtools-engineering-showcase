@@ -1,0 +1,38 @@
+{
+  "name": "promptlabtools-engineering-showcase",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Public engineering showcase for PromptLabTools AI workflow, platform engineering, and automation patterns.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.18.0"
+  },
+  "overrides": {
+    "postcss": "^8.5.15"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build"
+  },
+  "dependencies": {
+    "next": "^16.2.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "^16.2.6",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^4"
+  }
+}
