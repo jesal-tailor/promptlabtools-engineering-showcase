@@ -12,6 +12,7 @@ import { prompts } from "@/lib/mockData/prompts";
 import { tools } from "@/lib/mockData/tools";
 import { workflowRuns } from "@/lib/mockData/workflowRuns";
 import { promptRegistry as runtimePromptRegistry } from "@/lib/prompts/promptRegistry";
+import { createRepositoryContext } from "@/lib/repositories/repositoryFactory";
 import {
   runCampaignPublishPackageWorkflow,
   runCampaignWorkflowWithApprovalDecision,
@@ -39,9 +40,19 @@ const evaluationById = new Map(evaluations.map((evaluation) => [evaluation.id, e
 const promptById = new Map(prompts.map((prompt) => [prompt.id, prompt]));
 const toolById = new Map(tools.map((tool) => [tool.id, tool]));
 const runtimeSampleRunId = "runtime_sample";
+const runtimeSampleRepositoryContext = createRepositoryContext();
 const sampleRuntimeResult = runCampaignPublishPackageWorkflow({
   campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
+  repositories: runtimeSampleRepositoryContext,
 });
+const runtimeRepositoryRunPersisted =
+  runtimeSampleRepositoryContext.workflowRunRepository.getById(sampleRuntimeResult.runId).ok;
+const runtimeRepositoryEventCount = runtimeSampleRepositoryContext.workflowRunRepository.listEvents(
+  sampleRuntimeResult.runId,
+).length;
+const runtimeRepositoryToolCallCount = runtimeSampleRepositoryContext.toolCallRepository.listByRunId(
+  sampleRuntimeResult.runId,
+).length;
 const activeRuntimePrompts = runtimePromptRegistry.filter((prompt) => prompt.status === "active");
 const runtimePlannerEvaluation = evaluationHistory.find(
   (evaluation) => evaluation.id === "eval_hist_planner_v2",
@@ -324,6 +335,20 @@ function RuntimeSampleResultPage({ result }: { result: CampaignWorkflowRunResult
               value={formatUsdEstimate(result.evaluationSummary.cost.estimatedCostUsd)}
             />
           </div>
+
+          <div className="mt-6 rounded-3xl border border-cyan-200/20 bg-black/30 p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
+              Repository-backed mock execution
+            </p>
+            <p className="mt-3 max-w-4xl text-sm leading-6 text-cyan-50">
+              Backed by public-safe in-memory repository adapter. Persisted run:{" "}
+              {runtimeRepositoryRunPersisted ? "yes" : "no"}, step events: {runtimeRepositoryEventCount},
+              tool calls: {runtimeRepositoryToolCallCount}.
+            </p>
+            <p className="mt-2 max-w-4xl text-sm leading-6 text-cyan-100">
+              Production version would swap this for Supabase/Postgres through the repository factory.
+            </p>
+          </div>
         </section>
 
         <section className="mt-10 rounded-[2rem] border border-emerald-300/20 bg-emerald-300/10 p-6">
@@ -379,9 +404,9 @@ function RuntimeSampleResultPage({ result }: { result: CampaignWorkflowRunResult
                 Runtime output is tied back to versioned prompts and deterministic quality gates.
               </h2>
               <p className="mt-3 max-w-3xl leading-7 text-sky-100">
-                The sample result is still non-persistent mock execution. Active prompts are listed
-                as registry metadata, and the planner evaluation shows how a run would be checked
-                before human approval.
+                The sample result is persisted only to the public-safe in-memory repository adapter.
+                Active prompts are listed as registry metadata, and the planner evaluation shows how
+                a run would be checked before human approval.
               </p>
             </div>
             <div className="grid gap-3 text-sm text-sky-100 sm:grid-cols-3 lg:min-w-[32rem]">

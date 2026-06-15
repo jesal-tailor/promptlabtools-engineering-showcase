@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { StatusBadge } from "@/components/StatusBadge";
+import { createRepositoryContext } from "@/lib/repositories/repositoryFactory";
 import { getToolAuditEvents } from "@/lib/tools/toolAuditLog";
 
 export const metadata: Metadata = {
@@ -10,6 +11,10 @@ export const metadata: Metadata = {
 
 export default function ToolAuditPage() {
   const auditEvents = getToolAuditEvents();
+  const repositories = createRepositoryContext();
+  const repositoryAuditEvents = repositories.auditEventRepository
+    .list()
+    .filter((event) => event.domain === "tool");
 
   return (
     <main className="bg-black px-6 py-16 text-white">
@@ -27,6 +32,20 @@ export default function ToolAuditPage() {
           This audit trail demonstrates the shape of governance logging for agent tool calls.
           Events are in-memory mock records, not production audit logs.
         </p>
+
+        <section className="mt-10 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">
+            Repository-backed audit records
+          </p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+            Tool audit events can be read through the persistence boundary.
+          </h2>
+          <p className="mt-3 max-w-3xl leading-7 text-cyan-100">
+            Backed by public-safe in-memory repository adapter with {repositoryAuditEvents.length} seeded
+            tool audit records. Production version would swap this for Supabase/Postgres through the
+            repository factory.
+          </p>
+        </section>
 
         <section className="mt-10 grid gap-4">
           {auditEvents.map((event) => (

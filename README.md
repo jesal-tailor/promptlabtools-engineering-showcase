@@ -5,7 +5,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-d4af37.svg)](./LICENSE)
 
-PromptLabTools Engineering Showcase is a public-safe AI Platform Engineering portfolio project that demonstrates the shape of an agentic workflow control plane: typed workflow runs, deterministic mock agent runtimes, workflow execution, prompt and tool registries, human approval gates, evaluation scores, observability-style traces, API contracts, documentation, tests, and CI quality gates.
+PromptLabTools Engineering Showcase is a public-safe AI Platform Engineering portfolio project that demonstrates the shape of an agentic workflow control plane: typed workflow runs, deterministic mock agent runtimes, workflow execution, prompt and tool registries, human approval gates, evaluation scores, observability-style traces, repository boundaries, API contracts, documentation, tests, and CI quality gates.
 
 This is a curated proof-of-work repository. It is not a copy of the private PromptLabTools production codebase.
 
@@ -26,6 +26,7 @@ This is a curated proof-of-work repository. It is not a copy of the private Prom
 5. Open `/approvals`, `/prompts`, `/evaluations`, and `/tools` to review the registries behind the workflow.
 6. Open `/prompts/prompt_campaign_planner_v2` and `/evaluations/eval_hist_planner_v2` to inspect Stage 5 prompt lifecycle, version comparison, deterministic scoring, and feedback loops.
 7. Open `/tools` and `/tools/audit` to inspect the Stage 6 mock tool execution sandbox, blocked high-risk execution, and audit trail.
+8. Look for the Stage 7 labels on `/dashboard`, `/workflows/runtime_sample`, `/approvals/gate_launch-a-public-safe-ai-workflow-showcase-for-cv_publish`, `/tools/audit`, and `/evaluations/eval_hist_planner_v2` to see the public-safe in-memory repository boundary.
 
 ## Architecture Summary
 
@@ -40,6 +41,9 @@ Mock workflow control-plane UI
   |
   v
 Typed local fixtures and helper functions
+  |
+  v
+Public-safe repository interfaces and memory adapters
   |
   v
 Mock API route with validation and typed workflow events
@@ -60,6 +64,7 @@ There are no real external API calls. Webhook-like destinations use `mock://` id
 | Prompt governance | Versioned prompt registry, lifecycle simulation, rendering, comparison, and feedback loops under `src/lib/prompts` |
 | Evaluation governance | Deterministic mock judge, score history, human feedback, and regression checks under `src/lib/evaluations` |
 | Tool execution governance | Permissioned mock tool executor, adapters, typed errors, audit log, and trace events under `src/lib/tools` |
+| Persistence boundary | Repository interfaces, memory adapters, and factory under `src/lib/repositories` |
 | TypeScript modelling | Shared types under `src/types` and typed fixtures under `src/lib/mockData` |
 | API contract design | Mock lead and workflow-start API routes with validation and safe JSON responses |
 | Frontend engineering | App Router pages for dashboard, workflow detail, registries, and documentation links |
@@ -147,6 +152,8 @@ GitHub Actions runs lint, typecheck, tests, and build on push and pull request.
 - [Tool execution sandbox](./docs/TOOL_EXECUTION_SANDBOX.md)
 - [Tool registry](./docs/TOOL_REGISTRY.md)
 - [Adapter boundary](./docs/ADAPTER_BOUNDARY.md)
+- [Persistence boundary](./docs/PERSISTENCE_BOUNDARY.md)
+- [Repository pattern](./docs/REPOSITORY_PATTERN.md)
 - [Architecture](./docs/ARCHITECTURE.md)
 - [Security and privacy](./docs/SECURITY_AND_PRIVACY.md)
 - [Engineering decisions](./docs/ENGINEERING_DECISIONS.md)
@@ -163,6 +170,7 @@ Stage 1 and Stage 2 are implemented first:
 - Stage 4: Human approval governance, audit events, approval decision API, and continuation paths for approved, rejected, and needs-changes decisions.
 - Stage 5: Prompt registry v2, deterministic evaluation engine, human feedback loop, quality regression checks, API routes, UI pages, docs, and tests.
 - Stage 6: Tool execution sandbox, mock adapters, permission checks, typed tool errors, audit events, API routes, UI pages, workflow integration, docs, and tests.
+- Stage 7: Persistence boundary, repository interfaces, public-safe in-memory adapters, runtime/API integration, docs, and tests.
 
 Future public-safe stages:
 

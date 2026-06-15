@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sampleApprovalRunId } from "@/lib/approvals/approvalAuditLog";
 import { applyApprovalDecision } from "@/lib/approvals/approvalStateMachine";
 import type { ApprovalDecision, ApprovalDecisionPayload } from "@/lib/approvals/approvalTypes";
+import { createRepositoryContext } from "@/lib/repositories/repositoryFactory";
 
 type ApprovalDecisionRouteContext = {
   params: Promise<{ approvalId: string }>;
@@ -89,14 +90,22 @@ export async function POST(request: Request, context: ApprovalDecisionRouteConte
     );
   }
 
+  const repositories = createRepositoryContext();
   const result = applyApprovalDecision({
     payload: validation.payload,
+    repositories,
   });
 
   return NextResponse.json({
     ok: true,
     approvalId,
     result,
+    repository: {
+      adapterType: repositories.approvalRepository.adapterType,
+      persistedApproval: repositories.approvalRepository.getById(approvalId).ok,
+      auditEvents: repositories.auditEventRepository.list().filter((event) => event.subjectId === approvalId).length,
+      publicSafetyNote: repositories.approvalRepository.publicSafetyNote,
+    },
     note: "Public-safe mock governance only. No database, identity provider, webhook, or production workflow was called.",
   });
 }

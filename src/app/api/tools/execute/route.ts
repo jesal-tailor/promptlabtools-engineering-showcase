@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { agentRegistry } from "@/lib/agents/agentRegistry";
 import type { RuntimeAgentId } from "@/lib/agents/agentTypes";
+import { createRepositoryContext } from "@/lib/repositories/repositoryFactory";
 import { executeToolCall } from "@/lib/tools/toolExecutor";
 import type { JsonObject } from "@/lib/tools/toolTypes";
 
@@ -65,10 +66,12 @@ export async function POST(request: Request) {
     );
   }
 
+  const repositories = createRepositoryContext();
   const result = executeToolCall({
     agentId: agentId as RuntimeAgentId,
     approved,
     inputPayload: validatedInputPayload,
+    repositories,
     runId,
     stepId,
     toolId,
@@ -77,6 +80,11 @@ export async function POST(request: Request) {
   return NextResponse.json({
     ok: result.ok,
     result,
+    repository: {
+      adapterType: repositories.toolCallRepository.adapterType,
+      persistedToolCall: repositories.toolCallRepository.getById(result.toolCall.toolCallId).ok,
+      publicSafetyNote: repositories.toolCallRepository.publicSafetyNote,
+    },
     status: result.toolCall.status,
     note: "Mock public-safe tool execution sandbox only. No real API, webhook, filesystem, GitHub, or publishing action was called.",
   });

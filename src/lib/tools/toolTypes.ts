@@ -1,5 +1,6 @@
 import type { RuntimeAgentId } from "@/lib/agents/agentTypes";
 import type { RuntimeTraceEvent } from "@/lib/observability/traceEvents";
+import type { RepositoryContext } from "@/lib/repositories/repositoryTypes";
 
 export type ToolRiskLevel = "low" | "medium" | "high";
 
@@ -89,6 +90,7 @@ export type ToolExecutionInput = {
   createdAt?: string;
   completedAt?: string;
   sequence?: number;
+  repositories?: RepositoryContext;
 };
 
 export type ToolExecutionResult = {

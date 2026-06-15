@@ -6,6 +6,8 @@ import { runQaAgent } from "@/lib/agents/qaAgent";
 import { applyApprovalDecision } from "@/lib/approvals/approvalStateMachine";
 import { estimateWorkflowCost } from "@/lib/observability/costEstimator";
 import { createTraceEvent } from "@/lib/observability/traceEvents";
+import type { EvaluationRun } from "@/lib/evaluations/evaluationTypes";
+import type { RepositoryContext } from "@/lib/repositories/repositoryTypes";
 import { executeToolCall } from "@/lib/tools/toolExecutor";
 import type { ToolCall, ToolExecutionResult } from "@/lib/tools/toolTypes";
 import { campaignPublishPackageTemplate } from "@/lib/workflows/workflowTemplates";
@@ -102,8 +104,9 @@ function buildFinalPublishPackage({
 
 function runCampaignWorkflowToApprovalGate({
   campaignGoal,
+  repositories,
   runStartedAt = defaultRunStartedAt,
-}: CampaignWorkflowInput & { runStartedAt?: string }): ApprovalGateRun {
+}: CampaignWorkflowInput & { repositories?: RepositoryContext; runStartedAt?: string }): ApprovalGateRun {
   const normalisedGoal = normaliseCampaignGoal(campaignGoal);
   const goalSlug = createGoalSlug(normalisedGoal) || "campaign";
   const runId = `mock_run_campaign_publish_package_${goalSlug}`;
@@ -195,6 +198,7 @@ function runCampaignWorkflowToApprovalGate({
         body: drafting.body,
         title: drafting.headline,
       },
+      repositories,
       runId,
       sequence,
       stepId: "drafting_agent",
@@ -221,6 +225,7 @@ function runCampaignWorkflowToApprovalGate({
     inputPayload: {
       content: `${drafting.headline}\n${drafting.body}\n${drafting.callToAction}`,
     },
+    repositories,
     runId,
     sequence,
     stepId: "qa_agent",
@@ -361,11 +366,87 @@ function runCampaignWorkflowToApprovalGate({
   };
 }
 
+function createRuntimeEvaluationRecord(
+  result: Pick<CampaignWorkflowRunResult, "runId" | "agentOutputs" | "evaluationSummary" | "campaignGoal">,
+): EvaluationRun {
+  const score = result.evaluationSummary.score;
+
+  return {
+    id: `repo_eval_${result.runId}`,
+    promptId: "prompt_campaign_qa_v1",
+    output: result.agentOutputs.qa.summary,
+    criteriaId: "criteria_campaign_qa_v1",
+    scores: {
+      accuracy: score,
+      brandFit: score,
+      specificity: score,
+      actionability: score,
+      risk: score,
+      ctaClarity: score,
+      governanceFit: score,
+      overallScore: score,
+    },
+    overallScore: score,
+    passed: result.evaluationSummary.passed,
+    judgeFeedback: `Repository-backed mock evaluation for ${result.campaignGoal}. ${result.evaluationSummary.recommendation}`,
+    createdAt: "2026-06-15T13:30:00.000Z",
+  };
+}
+
+function persistCampaignWorkflowResult({
+  repositories,
+  result,
+}: {
+  repositories?: RepositoryContext;
+  result: CampaignWorkflowContinuationResult | CampaignWorkflowRunResult;
+}) {
+  if (!repositories) {
+    return;
+  }
+
+  const firstTrace = result.traceEvents[0];
+  const lastTrace = result.traceEvents.at(-1);
+  const persistedStatus =
+    result.status === "returned_to_drafting"
+      ? "needs_changes"
+      : result.status === "stopped"
+        ? "failed"
+        : "runtime_completed";
+
+  repositories.workflowRunRepository.create({
+    id: result.runId,
+    title: `Runtime campaign workflow: ${result.campaignGoal}`,
+    status: persistedStatus,
+    source: "runtime",
+    createdAt: firstTrace?.createdAt ?? "2026-06-15T09:00:00.000Z",
+    updatedAt: lastTrace?.createdAt ?? "2026-06-15T09:00:00.000Z",
+    publicSafetyNote:
+      "Backed by public-safe in-memory repository adapter. Runtime record is deterministic mock data only.",
+  });
+
+  for (const event of result.traceEvents) {
+    repositories.workflowRunRepository.appendEvent({
+      id: `repo_step_${event.id}`,
+      runId: event.runId,
+      sequence: event.sequence,
+      eventType: event.type,
+      stepId: event.stepId,
+      agentId: event.agentId,
+      message: event.message,
+      createdAt: event.createdAt,
+      metadata: event.metadata,
+    });
+  }
+
+  repositories.evaluationRepository.create(createRuntimeEvaluationRecord(result));
+}
+
 export function runCampaignPublishPackageWorkflow({
   campaignGoal,
+  repositories,
   runStartedAt = defaultRunStartedAt,
-}: CampaignWorkflowInput & { runStartedAt?: string }): CampaignWorkflowRunResult {
-  const gateRun = runCampaignWorkflowToApprovalGate({ campaignGoal, runStartedAt });
+}: CampaignWorkflowInput & { repositories?: RepositoryContext; runStartedAt?: string }): CampaignWorkflowRunResult {
+  const gateRun = runCampaignWorkflowToApprovalGate({ campaignGoal, repositories, runStartedAt });
   const finalPublishPackage = buildFinalPublishPackage({
     approvalGateId: gateRun.approvalRequirement.gateId,
     campaignGoal: gateRun.campaignGoal,
@@ -384,6 +465,7 @@ export function runCampaignPublishPackageWorkflow({
       title: finalPublishPackage.title,
     },
     runId: gateRun.runId,
+    repositories,
     sequence: gateRun.nextSequence,
     stepId: "publish_package",
     toolId: "create_mock_publish_package",
@@ -410,7 +492,7 @@ export function runCampaignPublishPackageWorkflow({
     }),
   );
 
-  return {
+  const result: CampaignWorkflowRunResult = {
     runId: gateRun.runId,
     templateId: campaignPublishPackageTemplate.id,
     status: "completed",
@@ -433,6 +515,10 @@ export function runCampaignPublishPackageWorkflow({
     publicSafetyNote:
       "Deterministic mock runtime result only. No external AI APIs, webhooks, credentials, production data, or private PromptLabTools logic were used.",
   };
+
+  persistCampaignWorkflowResult({ repositories, result });
+
+  return result;
 }
 
 export function runCampaignWorkflowWithApprovalDecision({
@@ -441,9 +527,12 @@ export function runCampaignWorkflowWithApprovalDecision({
   decidedAt = "2026-06-15T10:30:00.000Z",
   decidedBy,
   reviewerComment,
+  repositories,
   runStartedAt = defaultRunStartedAt,
-}: CampaignWorkflowApprovalDecisionInput): CampaignWorkflowContinuationResult {
-  const gateRun = runCampaignWorkflowToApprovalGate({ campaignGoal, runStartedAt });
+}: CampaignWorkflowApprovalDecisionInput & {
+  repositories?: RepositoryContext;
+}): CampaignWorkflowContinuationResult {
+  const gateRun = runCampaignWorkflowToApprovalGate({ campaignGoal, repositories, runStartedAt });
   const approvalDecisionPayload = {
     approvalId: gateRun.approvalRequirement.gateId,
     runId: gateRun.runId,
@@ -455,6 +544,7 @@ export function runCampaignWorkflowWithApprovalDecision({
   };
   const approvalDecisionResult = applyApprovalDecision({
     payload: approvalDecisionPayload,
+    repositories,
   });
   const nextSequence = gateRun.nextSequence;
 
@@ -469,6 +559,7 @@ export function runCampaignWorkflowWithApprovalDecision({
         source: "promptlabtools-showcase",
       },
       runId: gateRun.runId,
+      repositories,
       sequence: nextSequence,
       stepId: "publish_package",
       toolId: "generate_mock_utm_url",
@@ -487,6 +578,7 @@ export function runCampaignWorkflowWithApprovalDecision({
             : "https://example.test/mock",
       },
       runId: gateRun.runId,
+      repositories,
       sequence: nextSequence + 1,
       stepId: "publish_package",
       toolId: "create_mock_publish_package",
@@ -525,7 +617,7 @@ export function runCampaignWorkflowWithApprovalDecision({
       }),
     );
 
-    return createContinuationResult({
+    const result = createContinuationResult({
       gateRun,
       approvalDecisionPayload,
       approvalDecisionResult,
@@ -541,6 +633,9 @@ export function runCampaignWorkflowWithApprovalDecision({
       ],
       status: "completed",
     });
+    persistCampaignWorkflowResult({ repositories, result });
+
+    return result;
   }
 
   if (approvalDecision === "rejected") {
@@ -565,7 +660,7 @@ export function runCampaignWorkflowWithApprovalDecision({
       }),
     );
 
-    return createContinuationResult({
+    const result = createContinuationResult({
       gateRun,
       approvalDecisionPayload,
       approvalDecisionResult,
@@ -573,6 +668,9 @@ export function runCampaignWorkflowWithApprovalDecision({
       orderedSteps: gateRun.orderedStepsToApproval,
       status: "stopped",
     });
+    persistCampaignWorkflowResult({ repositories, result });
+
+    return result;
   }
 
   const revisionInstruction =
@@ -598,7 +696,7 @@ export function runCampaignWorkflowWithApprovalDecision({
     }),
   );
 
-  return createContinuationResult({
+  const result = createContinuationResult({
     gateRun,
     approvalDecisionPayload,
     approvalDecisionResult,
@@ -607,6 +705,9 @@ export function runCampaignWorkflowWithApprovalDecision({
     revisionInstruction,
     status: "returned_to_drafting",
   });
+  persistCampaignWorkflowResult({ repositories, result });
+
+  return result;
 }
 
 function createContinuationResult({

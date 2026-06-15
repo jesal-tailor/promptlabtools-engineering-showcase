@@ -38,6 +38,29 @@ function createToolCallId({ runId, stepId, toolId }: ToolExecutionInput) {
   return `tool_call_${runId}_${stepId}_${toolId}`.replace(/[^a-zA-Z0-9_]+/g, "_");
 }
 
+function persistToolExecution(input: ToolExecutionInput, toolCall: ToolCall): void {
+  input.repositories?.toolCallRepository.create(toolCall);
+  input.repositories?.auditEventRepository.appendEvent({
+    id: `repo_audit_${toolCall.toolCallId}`,
+    domain: "tool",
+    type: "tool_call_recorded",
+    subjectId: toolCall.toolCallId,
+    runId: toolCall.runId,
+    message:
+      toolCall.status === "executed"
+        ? `${toolCall.toolId} executed through the public-safe repository boundary.`
+        : toolCall.errorMessage ?? `${toolCall.toolId} did not execute.`,
+    createdAt: toolCall.completedAt ?? toolCall.createdAt,
+    metadata: {
+      agentId: toolCall.agentId,
+      requiresApproval: toolCall.requiresApproval,
+      riskLevel: toolCall.riskLevel,
+      status: toolCall.status,
+      toolId: toolCall.toolId,
+    },
+  });
+}
+
 function createNonExecutedResult({
   error,
   input,
@@ -68,6 +91,7 @@ function createNonExecutedResult({
     completedAt,
   };
   const auditEvent = appendToolAuditEvent(toolCall);
+  persistToolExecution(input, toolCall);
   const traceEvent = createTraceEvent({
     agentId: input.agentId,
     createdAt,
@@ -142,6 +166,7 @@ export function executeToolCall(input: ToolExecutionInput): ToolExecutionResult 
       completedAt,
     };
     const auditEvent = appendToolAuditEvent(toolCall);
+    persistToolExecution(input, toolCall);
     const traceEvent = createTraceEvent({
       agentId: input.agentId,
       createdAt,

@@ -11,6 +11,7 @@ Jesal can design and implement a credible AI workflow platform surface:
 - Human approval gates.
 - Evaluation feedback.
 - Workflow trace observability.
+- Repository pattern and persistence boundary.
 - API validation.
 - Public-safe documentation.
 - Automated quality checks.
@@ -37,6 +38,8 @@ The repo is deliberately safe for public viewing. It does not expose production 
    - Review deterministic judge feedback, dimension scores, and regression context.
 9. Open `/tools` and `/tools/audit`.
    - Review the mock tool execution sandbox, blocked high-risk execution, adapter boundary, and audit trail.
+10. Notice the Stage 7 repository labels on the dashboard, runtime sample, approval detail, tool audit, and evaluation detail pages.
+   - These show how the same mock system could move toward durable storage through a repository factory.
 
 ## What To Look For In The Code
 
@@ -50,6 +53,7 @@ The repo is deliberately safe for public viewing. It does not expose production 
 | Prompt registry v2 | `src/lib/prompts` and `src/app/prompts` |
 | Evaluation engine v2 | `src/lib/evaluations` and `src/app/evaluations` |
 | Tool execution sandbox | `src/lib/tools`, `src/app/tools`, and `/api/tools/execute` |
+| Persistence boundary | `src/lib/repositories` and Stage 7 repository tests |
 | Tests | `tests` |
 | CI | `.github/workflows/ci.yml` |
 
@@ -64,6 +68,7 @@ The repo is deliberately safe for public viewing. It does not expose production 
 - Why deterministic mock evaluators are useful in a public CV showcase.
 - How a permissioned tool executor prevents agents from directly calling high-risk integrations.
 - How adapter boundaries make later production integrations safer to add.
+- How repository boundaries make later Supabase/Postgres persistence safer to add.
 - How evaluation feedback can block or route workflow runs.
 - How TypeScript models can make platform behaviour clearer before a real backend exists.
 - How CI and tests protect a portfolio project from becoming only a visual demo.

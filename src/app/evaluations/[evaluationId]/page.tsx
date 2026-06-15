@@ -3,17 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StatusBadge } from "@/components/StatusBadge";
 import { getEvaluationCriteriaForPrompt } from "@/lib/evaluations/evaluationCriteria";
-import {
-  compareEvaluationRuns,
-  evaluationHistory,
-  getEvaluationRunById,
-} from "@/lib/evaluations/evaluationHistory";
+import { compareEvaluationRuns, evaluationHistory } from "@/lib/evaluations/evaluationHistory";
 import {
   recommendPromptImprovement,
   summariseHumanFeedbackForPrompt,
 } from "@/lib/evaluations/humanFeedback";
 import { detectQualityRegression } from "@/lib/evaluations/regressionChecks";
 import { getPromptById } from "@/lib/prompts/promptRegistry";
+import { createRepositoryContext } from "@/lib/repositories/repositoryFactory";
 
 type EvaluationDetailPageProps = {
   params: Promise<{ evaluationId: string }>;
@@ -25,7 +22,9 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: EvaluationDetailPageProps): Promise<Metadata> {
   const { evaluationId } = await params;
-  const evaluation = getEvaluationRunById(evaluationId);
+  const repositories = createRepositoryContext();
+  const evaluationResult = repositories.evaluationRepository.getById(evaluationId);
+  const evaluation = evaluationResult.ok ? evaluationResult.record : undefined;
 
   return {
     title: evaluation ? `${evaluation.id} Evaluation` : "Evaluation Detail",
@@ -35,12 +34,14 @@ export async function generateMetadata({ params }: EvaluationDetailPageProps): P
 
 export default async function EvaluationDetailPage({ params }: EvaluationDetailPageProps) {
   const { evaluationId } = await params;
-  const evaluation = getEvaluationRunById(evaluationId);
+  const repositories = createRepositoryContext();
+  const evaluationResult = repositories.evaluationRepository.getById(evaluationId);
 
-  if (!evaluation) {
+  if (!evaluationResult.ok) {
     notFound();
   }
 
+  const evaluation = evaluationResult.record;
   const prompt = getPromptById(evaluation.promptId);
   const criteria = getEvaluationCriteriaForPrompt(evaluation.promptId);
   const feedback = summariseHumanFeedbackForPrompt(evaluation.promptId);
@@ -81,6 +82,19 @@ export default async function EvaluationDetailPage({ params }: EvaluationDetailP
               label="Created"
               value={new Date(evaluation.createdAt).toLocaleDateString("en-GB", { dateStyle: "medium" })}
             />
+          </div>
+
+          <div className="mt-6 rounded-3xl border border-cyan-200/20 bg-black/30 p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
+              Repository boundary
+            </p>
+            <p className="mt-3 text-sm leading-6 text-cyan-50">
+              Backed by public-safe in-memory repository adapter. This evaluation was loaded through
+              the typed evaluation repository, not from a database or external LLM judge.
+            </p>
+            <p className="mt-2 text-sm leading-6 text-cyan-100">
+              Production version would swap this for Supabase/Postgres through the repository factory.
+            </p>
           </div>
         </section>
 

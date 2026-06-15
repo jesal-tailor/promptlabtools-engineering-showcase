@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createRepositoryContext } from "@/lib/repositories/repositoryFactory";
 import {
   runCampaignPublishPackageWorkflow,
   validateCampaignWorkflowInput,
@@ -37,11 +38,20 @@ export async function POST(request: Request) {
     );
   }
 
-  const workflow = runCampaignPublishPackageWorkflow(validation.data);
+  const repositories = createRepositoryContext();
+  const workflow = runCampaignPublishPackageWorkflow({
+    ...validation.data,
+    repositories,
+  });
 
   return NextResponse.json({
     ok: true,
     workflow,
+    repository: {
+      adapterType: repositories.workflowRunRepository.adapterType,
+      persistedWorkflowRun: repositories.workflowRunRepository.getById(workflow.runId).ok,
+      publicSafetyNote: repositories.workflowRunRepository.publicSafetyNote,
+    },
     note: "Deterministic mock runtime execution only. No external AI API, webhook, or production automation was called.",
   });
 }

@@ -35,6 +35,10 @@ describe("POST /api/workflows/start", () => {
         approvalRequirement: { required: boolean };
         traceEvents: Array<{ type: string }>;
       };
+      repository: {
+        adapterType: string;
+        persistedWorkflowRun: boolean;
+      };
     };
 
     expect(response.status).toBe(200);
@@ -51,5 +55,7 @@ describe("POST /api/workflows/start", () => {
     ]);
     expect(body.workflow.approvalRequirement.required).toBe(true);
     expect(body.workflow.traceEvents[0].type).toBe("workflow_started");
+    expect(body.repository.adapterType).toBe("memory");
+    expect(body.repository.persistedWorkflowRun).toBe(true);
   });
 });

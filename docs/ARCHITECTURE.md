@@ -23,6 +23,9 @@ Deterministic mock agent runtime
 Workflow runner, display helpers, and state helpers
   |
   v
+Repository interfaces and public-safe memory adapters
+  |
+  v
 Mock API routes
   |
   v
@@ -36,6 +39,8 @@ Validation, typed workflow events, and mock dispatch
 - **Agent runtime:** Deterministic planner, drafting, QA, and approval agents under `src/lib/agents`.
 - **Workflow engine:** `campaign_publish_package` runner, template, and state machine under `src/lib/workflows`.
 - **Approval governance:** Approval policy, state machine, and audit event helpers under `src/lib/approvals`.
+- **Tool execution sandbox:** Permission checks, typed errors, deterministic mock adapters, and audit events under `src/lib/tools`.
+- **Persistence boundary:** Repository interfaces, memory adapters, and factory under `src/lib/repositories`.
 - **Observability:** Trace event and mock cost helpers under `src/lib/observability`.
 - **Domain types:** Shared TypeScript models under `src/types`.
 - **API route:** `src/app/api/showcase-lead/route.ts`.
@@ -74,8 +79,30 @@ The relationships are held together by typed IDs and tested in `tests/mockData.t
 - Human review assignment.
 - Evaluation scoring.
 - Reporting and analytics.
+- Durable persistence.
 
 All mocked components are explicit. The API response states that no external service was called, and tool destinations use `mock://` identifiers only.
+
+## Stage 7 Repository Boundary
+
+Runtime and API flows can now receive a `RepositoryContext`. In this public showcase, the factory always returns memory adapters seeded from deterministic fixtures. The same boundary would be where production swaps in Supabase/Postgres-backed repositories.
+
+```text
+Workflow runner / approval state machine / tool executor
+  |
+  v
+RepositoryContext
+  |
+  +-- WorkflowRunRepository
+  +-- ApprovalRepository
+  +-- AuditEventRepository
+  +-- PromptRepository
+  +-- EvaluationRepository
+  +-- ToolCallRepository
+  |
+  v
+Public-safe memory adapters
+```
 
 ## Workflow Event Flow
 

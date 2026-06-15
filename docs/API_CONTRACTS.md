@@ -48,6 +48,11 @@ The route also accepts a simple form submission with a `campaignGoal` field.
     "traceEvents": [],
     "evaluationSummary": {}
   },
+  "repository": {
+    "adapterType": "memory",
+    "persistedWorkflowRun": true,
+    "publicSafetyNote": "Backed by public-safe in-memory repository adapter..."
+  },
   "note": "Deterministic mock runtime execution only. No external AI API, webhook, or production automation was called."
 }
 ```
@@ -115,6 +120,12 @@ Applies a deterministic mock approval decision.
       "type": "approval_decision_recorded"
     }
   },
+  "repository": {
+    "adapterType": "memory",
+    "persistedApproval": true,
+    "auditEvents": 1,
+    "publicSafetyNote": "Backed by public-safe in-memory repository adapter..."
+  },
   "note": "Public-safe mock governance only. No database, identity provider, webhook, or production workflow was called."
 }
 ```
@@ -181,7 +192,7 @@ Invalid input returns HTTP 400.
 
 `GET /api/evaluations/[runId]`
 
-Returns a deterministic mock evaluation run with human feedback summary and recommendation. Missing run IDs return HTTP 400.
+Returns a deterministic mock evaluation run with human feedback summary, recommendation, and repository metadata. Missing run IDs return HTTP 400.
 
 ## Check Evaluation Regression
 
@@ -261,6 +272,11 @@ Approval-required tools return a blocked result unless `approved: true` is suppl
       "code": "APPROVAL_REQUIRED"
     }
   },
+  "repository": {
+    "adapterType": "memory",
+    "persistedToolCall": true,
+    "publicSafetyNote": "Backed by public-safe in-memory repository adapter..."
+  },
   "note": "Mock public-safe tool execution sandbox only. No real API, webhook, filesystem, GitHub, or publishing action was called."
 }
 ```
@@ -271,10 +287,12 @@ Invalid input returns HTTP 400.
 
 `GET /api/tools/audit`
 
-Returns deterministic in-memory mock tool audit events. Optional query parameters:
+Returns deterministic in-memory mock tool audit events plus repository-backed audit records. Optional query parameters:
 
 - `runId`
 - `toolId`
+
+The response includes repository metadata with `adapterType: "memory"`.
 
 ## Public-Safe API Boundary
 
@@ -282,7 +300,7 @@ The API routes do not:
 
 - Call real AI providers.
 - Send webhooks.
-- Persist data.
+- Persist data to durable or external stores.
 - Use secrets.
 - Execute real tool adapters.
 - Execute production PromptLabTools automations.
@@ -295,6 +313,7 @@ Production API contracts would add:
 - Authentication and authorisation.
 - Idempotency keys.
 - Persistent run records.
+- Durable repository adapters behind the existing repository interfaces.
 - Async execution status endpoints.
 - Approval decision endpoints.
 - Prompt lifecycle and evaluation regression endpoints.

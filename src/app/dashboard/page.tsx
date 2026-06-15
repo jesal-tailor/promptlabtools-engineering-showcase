@@ -10,6 +10,7 @@ import { workflowRuns } from "@/lib/mockData/workflowRuns";
 import { promptRegistry } from "@/lib/prompts/promptRegistry";
 import type { PromptLifecycleStatus } from "@/lib/prompts/promptTypes";
 import { comparePromptVersions } from "@/lib/prompts/promptVersioning";
+import { createRepositoryContext } from "@/lib/repositories/repositoryFactory";
 import { toolRegistry } from "@/lib/tools/toolRegistry";
 import {
   runCampaignPublishPackageWorkflow,
@@ -34,9 +35,14 @@ export const metadata: Metadata = {
 const agentById = new Map(agents.map((agent) => [agent.id, agent]));
 const summary = summariseWorkflowRuns(workflowRuns);
 const pendingApprovals = approvals.filter((approval) => approval.status === "pending");
+const dashboardRepositoryContext = createRepositoryContext();
 const sampleRuntimeResult = runCampaignPublishPackageWorkflow({
   campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
+  repositories: dashboardRepositoryContext,
 });
+const repositoryRunCount = dashboardRepositoryContext.workflowRunRepository.list().length;
+const repositoryAuditEventCount = dashboardRepositoryContext.auditEventRepository.list().length;
+const repositoryToolCallCount = dashboardRepositoryContext.toolCallRepository.list().length;
 const approvedContinuation = runCampaignWorkflowWithApprovalDecision({
   approvalDecision: "approved",
   campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
@@ -113,6 +119,35 @@ export default function DashboardPage() {
             value={formatUsdEstimate(summary.estimatedCostUsd)}
             detail={`${formatTokenCount(summary.totalTokens)} tokens`}
           />
+        </section>
+
+        <section className="mt-10 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">
+                Stage 7 persistence boundary
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+                Runtime records now pass through a typed repository interface.
+              </h2>
+              <p className="mt-3 max-w-3xl leading-7 text-cyan-100">
+                Backed by public-safe in-memory repository adapter. Production version would swap
+                this for Supabase/Postgres through the repository factory, while keeping the runtime
+                and API contracts stable.
+              </p>
+              <div className="mt-4 grid gap-3 text-sm text-cyan-100 sm:grid-cols-3">
+                <span>Repository runs: {repositoryRunCount}</span>
+                <span>Tool call records: {repositoryToolCallCount}</span>
+                <span>Audit events: {repositoryAuditEventCount}</span>
+              </div>
+            </div>
+            <Link
+              href="/workflows/runtime_sample"
+              className="rounded-full bg-cyan-200 px-5 py-3 text-center text-sm font-semibold text-black transition hover:bg-cyan-100"
+            >
+              View persisted mock runtime
+            </Link>
+          </div>
         </section>
 
         <section className="mt-10 rounded-[2rem] border border-emerald-300/20 bg-emerald-300/10 p-6">

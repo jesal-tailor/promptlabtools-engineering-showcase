@@ -8,6 +8,7 @@ import {
 import { explainApprovalRequirement, requiresHumanApproval } from "@/lib/approvals/approvalPolicy";
 import { applyApprovalDecision } from "@/lib/approvals/approvalStateMachine";
 import type { ApprovalDecision, ApprovalWorkflowAction } from "@/lib/approvals/approvalTypes";
+import { createRepositoryContext } from "@/lib/repositories/repositoryFactory";
 import type { StatusTone } from "@/lib/workflowDisplay";
 
 type ApprovalDetailPageProps = {
@@ -53,20 +54,27 @@ export async function generateMetadata({ params }: ApprovalDetailPageProps): Pro
 
 export default async function ApprovalDetailPage({ params }: ApprovalDetailPageProps) {
   const { approvalId } = await params;
+  const repositories = createRepositoryContext();
   const examples = decisionExamples.map((example) => {
     const payload = createMockApprovalDecisionPayload({
       decision: example.decision,
       reviewerComment: example.reviewerComment,
     });
+    const payloadWithApprovalId = {
+      ...payload,
+      approvalId,
+    };
     const result = applyApprovalDecision({
-      payload: {
-        ...payload,
-        approvalId,
-      },
+      payload: payloadWithApprovalId,
+      repositories,
     });
 
-    return { payload, result };
+    return { payload: payloadWithApprovalId, result };
   });
+  const repositoryApprovalPersisted = repositories.approvalRepository.getById(approvalId).ok;
+  const repositoryAuditCount = repositories.auditEventRepository
+    .list()
+    .filter((event) => event.subjectId === approvalId).length;
 
   return (
     <main className="bg-black px-6 py-16 text-white">
@@ -99,6 +107,19 @@ export default async function ApprovalDetailPage({ params }: ApprovalDetailPageP
             <DetailField label="Risk level" value={mockApprovalSimulation.riskLevel} />
             <DetailField label="Reviewer role" value={mockApprovalSimulation.reviewerRole} />
             <DetailField label="Step" value={mockApprovalSimulation.stepId} />
+          </div>
+
+          <div className="mt-6 rounded-3xl border border-cyan-200/20 bg-black/30 p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
+              Repository boundary
+            </p>
+            <p className="mt-3 text-sm leading-6 text-cyan-50">
+              Backed by public-safe in-memory repository adapter. Persisted approval:{" "}
+              {repositoryApprovalPersisted ? "yes" : "no"}, approval audit events: {repositoryAuditCount}.
+            </p>
+            <p className="mt-2 text-sm leading-6 text-cyan-100">
+              Production version would swap this for Supabase/Postgres through the repository factory.
+            </p>
           </div>
         </section>
 

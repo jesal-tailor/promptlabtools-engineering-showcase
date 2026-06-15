@@ -6,6 +6,7 @@ import type {
   ApprovalStatus,
   ApprovalWorkflowAction,
 } from "@/lib/approvals/approvalTypes";
+import type { RepositoryContext } from "@/lib/repositories/repositoryTypes";
 
 const transitions: Record<ApprovalStatus, Partial<Record<ApprovalDecision, ApprovalStatus>>> = {
   pending_review: {
@@ -46,9 +47,11 @@ export function getWorkflowActionForApprovalDecision(decision: ApprovalDecision)
 export function applyApprovalDecision({
   currentStatus = "pending_review",
   payload,
+  repositories,
 }: {
   currentStatus?: ApprovalStatus;
   payload: ApprovalDecisionPayload;
+  repositories?: RepositoryContext;
 }): ApprovalDecisionResult {
   const newStatus = transitionApprovalStatus(currentStatus, payload.decision);
   const workflowAction = getWorkflowActionForApprovalDecision(payload.decision);
@@ -57,6 +60,44 @@ export function applyApprovalDecision({
     previousStatus: currentStatus,
     newStatus,
     workflowAction,
+  });
+
+  const updateResult = repositories?.approvalRepository.update(payload.approvalId, {
+    status: newStatus,
+    updatedAt: payload.decidedAt,
+    reason: payload.reviewerComment,
+  });
+
+  if (repositories && updateResult && !updateResult.ok) {
+    repositories.approvalRepository.create({
+      id: payload.approvalId,
+      runId: payload.runId,
+      stepId: payload.stepId,
+      status: newStatus,
+      riskLevel: "high",
+      reviewerRole: "Human operator",
+      reason: payload.reviewerComment,
+      createdAt: payload.decidedAt,
+      updatedAt: payload.decidedAt,
+      publicSafetyNote:
+        "Backed by public-safe in-memory repository adapter. Approval record was created because no existing mock record was found.",
+    });
+  }
+
+  repositories?.auditEventRepository.appendEvent({
+    id: `repo_${auditEvent.id}`,
+    domain: "approval",
+    type: auditEvent.type,
+    subjectId: payload.approvalId,
+    runId: payload.runId,
+    message: payload.reviewerComment,
+    createdAt: payload.decidedAt,
+    metadata: {
+      decision: payload.decision,
+      newStatus,
+      previousStatus: currentStatus,
+      workflowAction,
+    },
   });
 
   return {

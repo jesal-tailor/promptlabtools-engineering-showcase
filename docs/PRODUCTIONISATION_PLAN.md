@@ -11,7 +11,8 @@ The current app has:
 - Local validation and state-transition helpers.
 - Deterministic prompt registry and evaluation engine fixtures.
 - Deterministic mock tool registry, executor, adapter boundary, and audit events.
-- No database.
+- Public-safe repository interfaces with in-memory adapters only.
+- No durable database connection.
 - No authentication.
 - No external API calls.
 - No production webhook dispatch.
@@ -22,6 +23,7 @@ The current app has:
 - Add authentication and role-based access control.
 - Define tenant and workspace boundaries.
 - Move run, prompt, tool, approval, and evaluation records into durable storage.
+- Replace memory repositories with Supabase/Postgres adapters behind `createRepositoryContext()`.
 - Add migration tooling and seed data for local development.
 - Add secret management through the deployment platform or a dedicated secret store.
 - Add audit logging for every approval decision and tool execution.
@@ -30,6 +32,7 @@ The current app has:
 ## Phase 2: Workflow Execution Layer
 
 - Replace fixture runs with a workflow-run API and persistence model.
+- Persist workflow step events through the repository boundary before exposing run detail views.
 - Introduce a queue or event bus for async steps.
 - Add idempotency keys for retry-safe workflow execution.
 - Add explicit run states for cancellation, timeout, retry, and manual override.
@@ -40,6 +43,7 @@ The current app has:
 ## Phase 3: Prompt And Tool Governance
 
 - Store prompt bodies with version history, review metadata, and rollback support.
+- Persist prompt records through the prompt repository with promotion and rollback metadata.
 - Add prompt approval workflows before activation.
 - Add prompt comparison, semantic diffing, and environment promotion checks.
 - Add tool permissions by agent, user role, environment, and risk level.
@@ -53,6 +57,7 @@ The current app has:
 - Add automated evaluation suites with test sets, thresholds, and regression tracking.
 - Support human scoring and adjudication for subjective outputs.
 - Store human feedback with reviewer identity, artifact references, and prompt version links.
+- Persist evaluation results through the evaluation repository and attach trace/artifact references.
 - Block prompt promotion when quality regression checks fail.
 - Capture metrics for latency, token use, cost, approval wait time, retries, and failure causes.
 - Export traces to an observability backend.

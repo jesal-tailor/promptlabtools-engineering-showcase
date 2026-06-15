@@ -5,6 +5,7 @@ import { agents } from "@/lib/mockData/agents";
 import { approvals } from "@/lib/mockData/approvals";
 import { evaluations } from "@/lib/mockData/evaluations";
 import { workflowRuns } from "@/lib/mockData/workflowRuns";
+import { createRepositoryContext } from "@/lib/repositories/repositoryFactory";
 import { runCampaignPublishPackageWorkflow } from "@/lib/workflows/workflowRunner";
 import {
   formatTokenCount,
@@ -21,8 +22,10 @@ export const metadata: Metadata = {
 const agentById = new Map(agents.map((agent) => [agent.id, agent]));
 const approvalById = new Map(approvals.map((approval) => [approval.id, approval]));
 const evaluationById = new Map(evaluations.map((evaluation) => [evaluation.id, evaluation]));
+const workflowPageRepositoryContext = createRepositoryContext();
 const sampleRuntimeResult = runCampaignPublishPackageWorkflow({
   campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
+  repositories: workflowPageRepositoryContext,
 });
 
 export default function WorkflowsPage() {
@@ -62,6 +65,7 @@ export default function WorkflowsPage() {
             <p className="mt-3 leading-7 text-amber-100">
               This form posts to `/api/workflows/start` and returns JSON. It runs deterministic mock
               agents only: no external AI API, webhook, credential, production data, or private logic.
+              The response includes public-safe in-memory repository metadata.
             </p>
             <div className="mt-5 flex flex-wrap gap-3 text-sm text-amber-100">
               <span>{sampleRuntimeResult.orderedSteps.length} ordered steps</span>
