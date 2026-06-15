@@ -11,6 +11,7 @@ The deterministic mock design is intentional:
 - It protects private PromptLabTools production logic.
 - It shows where production services would attach without actually connecting them.
 - It makes the architecture reviewable in public.
+- It allows a Vercel preview to prove deployability without paid infrastructure.
 
 ## Current Showcase Boundary
 
@@ -27,6 +28,8 @@ The current app has:
 - No external API calls.
 - No production webhook dispatch.
 - No real prompt bodies or customer records.
+- No automatic deployment from Codex.
+- No Terraform apply required.
 
 ## What Would Change In Production
 
@@ -41,6 +44,19 @@ A production version would replace deterministic mocks with authenticated, durab
 - Production audit, retention, and incident controls.
 
 Those changes belong outside this public repository unless they remain mock-only and secret-free.
+
+## Stage 9 Platform Proof
+
+Stage 9 adds:
+
+- Vercel preview documentation.
+- Health and readiness endpoints.
+- Cloud architecture documentation.
+- Operations runbook.
+- CI/CD documentation.
+- Terraform/AWS productionisation scaffold.
+
+These prove platform readiness while keeping the public repo mock-only.
 
 ## Phase 1: Secure Foundations
 

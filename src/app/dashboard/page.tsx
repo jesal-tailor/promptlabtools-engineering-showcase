@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PublicSafeRuntimeBanner } from "@/components/PublicSafeRuntimeBanner";
 import { StatusBadge } from "@/components/StatusBadge";
 import { mockApprovalSimulation } from "@/lib/approvals/approvalAuditLog";
 import { compareEvaluationRuns, evaluationHistory } from "@/lib/evaluations/evaluationHistory";
@@ -107,6 +108,10 @@ export default function DashboardPage() {
           >
             Inspect workflow runs
           </Link>
+        </div>
+
+        <div className="mt-8">
+          <PublicSafeRuntimeBanner />
         </div>
 
         <section className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-5">

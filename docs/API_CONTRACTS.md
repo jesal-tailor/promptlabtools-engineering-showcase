@@ -2,6 +2,45 @@
 
 This repository exposes public-safe mock API routes only.
 
+## Health
+
+`GET /api/health`
+
+Returns deterministic public-safe service metadata.
+
+```json
+{
+  "status": "ok",
+  "service": "promptlabtools-engineering-showcase",
+  "timestamp": "2026-06-15T12:00:00.000Z",
+  "publicSafe": true,
+  "externalCallsEnabled": false
+}
+```
+
+## Readiness
+
+`GET /api/readiness`
+
+Returns mock readiness checks for preview deployment.
+
+```json
+{
+  "status": "ready",
+  "publicSafe": true,
+  "externalIntegrationsEnabled": false,
+  "checks": [
+    { "name": "mock repository factory available", "status": "pass" },
+    { "name": "mock workflow runner available", "status": "pass" },
+    { "name": "mock tool registry available", "status": "pass" },
+    { "name": "mock evaluation engine available", "status": "pass" },
+    { "name": "no external integrations enabled", "status": "pass" }
+  ]
+}
+```
+
+Readiness does not call real infrastructure. It verifies mock modules only.
+
 ## Start Workflow
 
 `POST /api/workflows/start`

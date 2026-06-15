@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PublicSafeRuntimeBanner } from "@/components/PublicSafeRuntimeBanner";
 import { StatusBadge } from "@/components/StatusBadge";
 import { mockApprovalSimulation } from "@/lib/approvals/approvalAuditLog";
 import { explainApprovalRequirement, getActionRiskLevel } from "@/lib/approvals/approvalPolicy";
@@ -45,6 +46,10 @@ export default function ApprovalsPage() {
           Approval states are fixture data. They show how a platform can pause, approve,
           reject, or request changes before higher-risk tool usage, with audit-ready decision metadata.
         </p>
+
+        <div className="mt-8">
+          <PublicSafeRuntimeBanner />
+        </div>
 
         <section className="mt-10 rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">

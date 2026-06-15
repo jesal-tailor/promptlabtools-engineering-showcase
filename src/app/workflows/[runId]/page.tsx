@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PublicSafeRuntimeBanner } from "@/components/PublicSafeRuntimeBanner";
 import { StatusBadge } from "@/components/StatusBadge";
 import { mockApprovalSimulation } from "@/lib/approvals/approvalAuditLog";
 import { evaluationHistory } from "@/lib/evaluations/evaluationHistory";
@@ -134,6 +135,10 @@ export default async function WorkflowRunDetailPage({ params }: WorkflowRunPageP
         <Link href="/workflows" className="text-sm font-semibold text-amber-200 hover:text-amber-100">
           Back to workflows
         </Link>
+
+        <div className="mt-8">
+          <PublicSafeRuntimeBanner />
+        </div>
 
         <div className="mt-8 rounded-[2rem] border border-white/10 bg-zinc-950 p-6">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
@@ -310,6 +315,10 @@ function RuntimeSampleResultPage({ result }: { result: CampaignWorkflowRunResult
         <Link href="/workflows" className="text-sm font-semibold text-amber-200 hover:text-amber-100">
           Back to workflows
         </Link>
+
+        <div className="mt-8">
+          <PublicSafeRuntimeBanner />
+        </div>
 
         <section className="mt-8 rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">

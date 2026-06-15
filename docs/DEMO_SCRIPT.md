@@ -128,6 +128,18 @@ Close with:
 
 > Everything here is intentionally mock-only: no real AI calls, no customer data, no webhooks, no production prompts, no secrets, and no real publishing. The real value is the architecture, modelling, tests, and governance thinking.
 
+## Optional Stage 9 Cloud Proof
+
+Open `/api/health` and `/api/readiness`.
+
+Point out:
+
+- Health reports `publicSafe: true`.
+- Health reports `externalCallsEnabled: false`.
+- Readiness checks the mock repository factory, workflow runner, tool registry, evaluation engine, and disabled external integrations.
+- `vercel.json` and deployment docs show preview readiness.
+- `infra/terraform/aws` documents future AWS planning without applying resources.
+
 ## Backup Technical Questions
 
 - Where are agents defined? `src/lib/agents`.
@@ -135,4 +147,6 @@ Close with:
 - Where are approval decisions handled? `src/lib/approvals/approvalStateMachine.ts`.
 - Where is the tool sandbox? `src/lib/tools`.
 - Where is the repository boundary? `src/lib/repositories`.
+- Where are health/readiness routes? `src/app/api/health` and `src/app/api/readiness`.
+- Where is the cloud planning scaffold? `infra/terraform/aws`.
 - What protects quality? Vitest tests, TypeScript strict checks, ESLint, build, and GitHub Actions CI.

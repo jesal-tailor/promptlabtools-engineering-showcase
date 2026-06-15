@@ -18,6 +18,8 @@ Jesal can design and implement a credible AI workflow platform surface:
 - Evaluation feedback.
 - Workflow trace observability.
 - Repository pattern and persistence boundary.
+- Deployment-ready Vercel preview shape.
+- Health and readiness endpoints.
 - API validation.
 - Public-safe documentation.
 - Automated quality checks.
@@ -54,6 +56,8 @@ The repo is deliberately safe for public viewing. It does not expose production 
    - Review the mock tool execution sandbox, blocked high-risk execution, adapter boundary, and audit trail.
 10. Notice the Stage 7 repository labels on the dashboard, runtime sample, approval detail, tool audit, and evaluation detail pages.
    - These show how the same mock system could move toward durable storage through a repository factory.
+11. Open `/api/health` and `/api/readiness`.
+   - These show Stage 9 platform readiness without enabling any real external integrations.
 
 ## What To Look For In The Code
 
@@ -68,6 +72,7 @@ The repo is deliberately safe for public viewing. It does not expose production 
 | Evaluation engine v2 | `src/lib/evaluations` and `src/app/evaluations` |
 | Tool execution sandbox | `src/lib/tools`, `src/app/tools`, and `/api/tools/execute` |
 | Persistence boundary | `src/lib/repositories` and Stage 7 repository tests |
+| Deployment proof | `vercel.json`, `/api/health`, `/api/readiness`, `docs/DEPLOYMENT_GUIDE.md`, and `infra/terraform/aws` |
 | Tests | `tests` |
 | CI | `.github/workflows/ci.yml` |
 
@@ -87,12 +92,15 @@ The repo is deliberately safe for public viewing. It does not expose production 
 - How evaluation feedback can block or route workflow runs.
 - How TypeScript models can make platform behaviour clearer before a real backend exists.
 - How CI and tests protect a portfolio project from becoming only a visual demo.
+- How health/readiness endpoints and deployment docs prove cloud readiness without requiring real infrastructure.
+- How a Terraform scaffold can communicate production planning without applying resources.
 
 ## What Is Not Being Claimed
 
 - This is not the private PromptLabTools production repository.
 - It does not connect to real PromptLabTools infrastructure.
 - It does not call live AI providers, webhooks, GitHub APIs, publishing APIs, social APIs, or databases.
+- It is not deployed automatically from this repo and does not require paid infrastructure.
 - It does not contain customer data, production prompts, production scoring logic, credentials, or private automation scripts.
 
 ## Public-Safe Statement

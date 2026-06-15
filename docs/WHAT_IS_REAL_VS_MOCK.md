@@ -17,6 +17,8 @@ This project is intentionally public-safe. It demonstrates real engineering skil
 | Repository pattern | Interfaces, memory adapters, factory, typed result shape, safe missing-record behavior, and integration tests |
 | Testing | Vitest coverage for runtime, APIs, registries, state machines, adapters, repositories, and display helpers |
 | Documentation and CI | Recruiter docs, architecture docs, public-safe boundary docs, and GitHub Actions checks |
+| Deployment readiness | Vercel config, health/readiness API routes, cloud architecture docs, operations runbook, and CI/CD documentation |
+| Cloud planning | Terraform/AWS scaffold for future productionisation planning, disabled by default |
 
 ## Mock / Public-Safe Simulation
 
@@ -31,6 +33,8 @@ This project is intentionally public-safe. It demonstrates real engineering skil
 | Publishing | No social, email, webhook, CRM, analytics, or GitHub action is sent |
 | Prompt content | Prompt templates are safe examples, not private PromptLabTools production prompts |
 | Customer data | No customer records, analytics exports, private lead data, or user data is included |
+| Deployment | No automatic production deployment is configured |
+| Terraform | Scaffold only; no `terraform apply` is required or performed |
 
 ## Why Deterministic Mock Design Is Intentional
 
@@ -39,6 +43,7 @@ This project is intentionally public-safe. It demonstrates real engineering skil
 - The public repo cannot leak private business logic.
 - Platform architecture can be reviewed independently of production systems.
 - The same interfaces show where production services would be introduced later.
+- Cloud readiness can be reviewed without requiring paid infrastructure or production secrets.
 
 ## What Is Not Being Claimed
 

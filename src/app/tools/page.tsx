@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PublicSafeRuntimeBanner } from "@/components/PublicSafeRuntimeBanner";
 import { StatusBadge } from "@/components/StatusBadge";
 import { agentRegistry } from "@/lib/agents/agentRegistry";
 import { executeToolCall } from "@/lib/tools/toolExecutor";
@@ -67,6 +68,10 @@ export default function ToolsPage() {
           >
             View tool audit trail
           </Link>
+        </div>
+
+        <div className="mt-8">
+          <PublicSafeRuntimeBanner />
         </div>
 
         <section className="mt-10 grid gap-4 md:grid-cols-4">

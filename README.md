@@ -9,6 +9,8 @@ Public-safe AI Platform Engineering showcase for an agentic workflow control pla
 
 This repo demonstrates how I model and build the platform layer around AI workflows: deterministic mock agents, orchestration, human approval gates, prompt and tool governance, evaluation checks, trace-style observability, repository boundaries, API contracts, tests, docs, and CI. It is a curated proof-of-work project, not a copy of the private PromptLabTools production codebase.
 
+**Live Preview:** Not deployed yet. This repo is deployment-ready for a public-safe Vercel preview.
+
 ![Dashboard screenshot](./docs/assets/dashboard.png)
 
 ## What This Demonstrates
@@ -17,6 +19,7 @@ This repo demonstrates how I model and build the platform layer around AI workfl
 - Agent runtime patterns using deterministic planner, drafting, QA, and approval agents.
 - Governance layers for prompts, tools, human approvals, audit events, evaluations, and quality regression checks.
 - Repository-pattern persistence boundaries using public-safe in-memory adapters only.
+- Deployment-ready cloud preview shape with health/readiness endpoints and Vercel configuration.
 - Product engineering across Next.js App Router, React, TypeScript, API routes, Tailwind CSS, Vitest, and CI.
 - Public-safe architecture: no secrets, no customer data, no real AI provider calls, no webhooks, and no production automation scripts.
 
@@ -74,6 +77,35 @@ Public-safe in-memory adapters
 ```
 
 For a diagram, see [docs/ARCHITECTURE_DIAGRAM.md](./docs/ARCHITECTURE_DIAGRAM.md).
+
+## Deployment Readiness
+
+The app is ready for a public-safe Vercel preview:
+
+- `vercel.json` defines Next.js build/dev/install commands.
+- `.env.example` documents optional mock-only values.
+- No secrets or paid infrastructure are required.
+- Health and readiness endpoints are available for preview checks.
+- Terraform/AWS files under `infra/` document future productionisation only.
+
+Deployment docs:
+
+- [Deployment guide](./docs/DEPLOYMENT_GUIDE.md)
+- [Vercel preview](./docs/VERCEL_PREVIEW.md)
+- [Environment variables](./docs/ENVIRONMENT_VARIABLES.md)
+
+## Health And Readiness
+
+- `GET /api/health` returns service health with `publicSafe: true` and `externalCallsEnabled: false`.
+- `GET /api/readiness` verifies mock repository, workflow runner, tool registry, evaluation engine, and disabled external integrations.
+
+## Platform Readiness
+
+- [Cloud architecture](./docs/CLOUD_ARCHITECTURE.md)
+- [Platform readiness](./docs/PLATFORM_READINESS.md)
+- [Operations runbook](./docs/OPERATIONS_RUNBOOK.md)
+- [CI/CD](./docs/CI_CD.md)
+- [Terraform scaffold](./infra/terraform/aws/README.md)
 
 ## Public-Safe Boundary
 
@@ -146,6 +178,13 @@ See [docs/WHAT_IS_REAL_VS_MOCK.md](./docs/WHAT_IS_REAL_VS_MOCK.md) for the full 
 - [Interview talk track](./docs/INTERVIEW_TALK_TRACK.md)
 - [What is real vs mock](./docs/WHAT_IS_REAL_VS_MOCK.md)
 - [Architecture diagram](./docs/ARCHITECTURE_DIAGRAM.md)
+- [Deployment guide](./docs/DEPLOYMENT_GUIDE.md)
+- [Vercel preview](./docs/VERCEL_PREVIEW.md)
+- [Environment variables](./docs/ENVIRONMENT_VARIABLES.md)
+- [Cloud architecture](./docs/CLOUD_ARCHITECTURE.md)
+- [Platform readiness](./docs/PLATFORM_READINESS.md)
+- [Operations runbook](./docs/OPERATIONS_RUNBOOK.md)
+- [CI/CD](./docs/CI_CD.md)
 - [Showcase overview](./docs/SHOWCASE_OVERVIEW.md)
 - [Recruiter walkthrough](./docs/RECRUITER_WALKTHROUGH.md)
 - [Technical skills map](./docs/TECHNICAL_SKILLS_MAP.md)
@@ -185,6 +224,7 @@ Implemented public-safe stages:
 - Stage 6: Tool execution sandbox, mock adapters, permission checks, typed tool errors, audit events, API routes, UI pages, workflow integration, docs, and tests.
 - Stage 7: Persistence boundary, repository interfaces, public-safe in-memory adapters, runtime/API integration, docs, and tests.
 - Stage 8: Recruiter-ready README, demo docs, screenshot assets, architecture diagram, and UI copy polish.
+- Stage 9: Deployment readiness, health/readiness endpoints, Vercel docs, cloud architecture, ops runbook, and Terraform productionisation scaffold.
 
 Future public-safe improvements:
 
@@ -192,7 +232,7 @@ Future public-safe improvements:
 - Add accessibility checks and visual regression coverage.
 - Add OpenAPI-style schema documentation for the mock routes.
 - Add example observability dashboards using fixture logs only.
-- Add optional preview deployment with no secrets and no real integrations.
+- Publish an optional Vercel preview with no secrets and no real integrations.
 
 ## Related Links
 

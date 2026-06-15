@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PublicSafeRuntimeBanner } from "@/components/PublicSafeRuntimeBanner";
 import { StatusBadge } from "@/components/StatusBadge";
 import { agentRegistry } from "@/lib/agents/agentRegistry";
 import { getEvaluationTrend } from "@/lib/evaluations/evaluationHistory";
@@ -58,6 +59,10 @@ export default function PromptsPage() {
           >
             View evaluation engine
           </Link>
+        </div>
+
+        <div className="mt-8">
+          <PublicSafeRuntimeBanner />
         </div>
 
         <section className="mt-10 grid gap-4 md:grid-cols-3">

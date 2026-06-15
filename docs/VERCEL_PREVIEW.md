@@ -1,0 +1,48 @@
+# Vercel Preview
+
+The repo is ready for a public-safe Vercel preview deployment.
+
+## Live Preview Status
+
+Live Preview: Not deployed yet. This repo is deployment-ready for a public-safe Vercel preview.
+
+## Configuration
+
+`vercel.json` declares:
+
+- Next.js framework.
+- `npm ci` install command.
+- `npm run build` build command.
+- `npm run dev` local dev command.
+- A public-safe response header.
+
+## Environment Variables
+
+No required secrets.
+
+Optional public-safe values are documented in [ENVIRONMENT_VARIABLES.md](./ENVIRONMENT_VARIABLES.md).
+
+## Preview Verification
+
+Check these routes after deployment:
+
+- `/`
+- `/dashboard`
+- `/workflows`
+- `/workflows/runtime_sample`
+- `/approvals`
+- `/prompts`
+- `/evaluations`
+- `/tools`
+- `/tools/audit`
+- `/api/health`
+- `/api/readiness`
+
+## Safety Notes
+
+- Do not add AI provider keys.
+- Do not add database URLs.
+- Do not add webhook URLs.
+- Do not add social API tokens.
+- Do not add production PromptLabTools configuration.
+- Do not connect this preview to production automation.

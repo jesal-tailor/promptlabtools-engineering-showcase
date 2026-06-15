@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PublicSafeRuntimeBanner } from "@/components/PublicSafeRuntimeBanner";
 import { StatusBadge } from "@/components/StatusBadge";
 import { agents } from "@/lib/mockData/agents";
 import { approvals } from "@/lib/mockData/approvals";
@@ -52,6 +53,10 @@ export default function WorkflowsPage() {
           >
             Back to dashboard
           </Link>
+        </div>
+
+        <div className="mt-8">
+          <PublicSafeRuntimeBanner />
         </div>
 
         <section className="mt-10 grid gap-6 rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6 lg:grid-cols-[1fr_0.9fr]">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PublicSafeRuntimeBanner } from "@/components/PublicSafeRuntimeBanner";
 import { StatusBadge } from "@/components/StatusBadge";
 import { evaluationCriteriaRegistry } from "@/lib/evaluations/evaluationCriteria";
 import { compareEvaluationRuns, evaluationHistory } from "@/lib/evaluations/evaluationHistory";
@@ -43,6 +44,10 @@ export default function EvaluationsPage() {
           >
             View prompt registry
           </Link>
+        </div>
+
+        <div className="mt-8">
+          <PublicSafeRuntimeBanner />
         </div>
 
         <section className="mt-10 grid gap-4 md:grid-cols-4">
