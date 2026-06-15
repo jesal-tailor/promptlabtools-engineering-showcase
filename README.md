@@ -24,6 +24,7 @@ This is a curated proof-of-work repository. It is not a copy of the private Prom
 3. Open `/workflows/runtime_sample` to inspect the deterministic Stage 3 runtime result.
 4. Use the mock start form on `/workflows` or POST JSON to `/api/workflows/start`.
 5. Open `/approvals`, `/prompts`, `/evaluations`, and `/tools` to review the registries behind the workflow.
+6. Open `/prompts/prompt_campaign_planner_v2` and `/evaluations/eval_hist_planner_v2` to inspect Stage 5 prompt lifecycle, version comparison, deterministic scoring, and feedback loops.
 
 ## Architecture Summary
 
@@ -55,6 +56,8 @@ There are no real external API calls. Webhook-like destinations use `mock://` id
 | AI platform engineering | Workflow runs, agents, prompts, tools, evaluations, approvals, and traces |
 | Agentic workflow design | Human gates, fail-closed mock publish step, registry-driven runtime metadata |
 | Mock runtime engineering | Deterministic planner, drafting, QA, and approval agents under `src/lib/agents` |
+| Prompt governance | Versioned prompt registry, lifecycle simulation, rendering, comparison, and feedback loops under `src/lib/prompts` |
+| Evaluation governance | Deterministic mock judge, score history, human feedback, and regression checks under `src/lib/evaluations` |
 | TypeScript modelling | Shared types under `src/types` and typed fixtures under `src/lib/mockData` |
 | API contract design | Mock lead and workflow-start API routes with validation and safe JSON responses |
 | Frontend engineering | App Router pages for dashboard, workflow detail, registries, and documentation links |
@@ -134,6 +137,11 @@ GitHub Actions runs lint, typecheck, tests, and build on push and pull request.
 - [Audit trail](./docs/AUDIT_TRAIL.md)
 - [Observability](./docs/OBSERVABILITY.md)
 - [API contracts](./docs/API_CONTRACTS.md)
+- [Prompt registry](./docs/PROMPT_REGISTRY.md)
+- [Prompt versioning](./docs/PROMPT_VERSIONING.md)
+- [Evaluation strategy](./docs/EVALUATION_STRATEGY.md)
+- [Human feedback loop](./docs/HUMAN_FEEDBACK_LOOP.md)
+- [Quality regression checks](./docs/QUALITY_REGRESSION_CHECKS.md)
 - [Architecture](./docs/ARCHITECTURE.md)
 - [Security and privacy](./docs/SECURITY_AND_PRIVACY.md)
 - [Engineering decisions](./docs/ENGINEERING_DECISIONS.md)
@@ -148,10 +156,10 @@ Stage 1 and Stage 2 are implemented first:
 - Stage 2: Dashboard prototype, workflow trace views, registries, mock data, and tests.
 - Stage 3: Deterministic mock agent runtime, workflow execution engine, trace events, cost estimates, workflow-start API, docs, and tests.
 - Stage 4: Human approval governance, audit events, approval decision API, and continuation paths for approved, rejected, and needs-changes decisions.
+- Stage 5: Prompt registry v2, deterministic evaluation engine, human feedback loop, quality regression checks, API routes, UI pages, docs, and tests.
 
 Future public-safe stages:
 
-- Add richer API contract examples for workflow run creation and approval decisions.
 - Add screenshots and a short demo video.
 - Add accessibility checks and visual regression coverage.
 - Add OpenAPI-style schema documentation for the mock routes.

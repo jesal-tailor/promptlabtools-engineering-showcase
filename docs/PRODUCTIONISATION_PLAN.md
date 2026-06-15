@@ -9,6 +9,7 @@ The current app has:
 - Static typed fixtures for agents, workflows, prompts, tools, approvals, and evaluations.
 - A mock lead-capture API route.
 - Local validation and state-transition helpers.
+- Deterministic prompt registry and evaluation engine fixtures.
 - No database.
 - No authentication.
 - No external API calls.
@@ -37,6 +38,7 @@ The current app has:
 
 - Store prompt bodies with version history, review metadata, and rollback support.
 - Add prompt approval workflows before activation.
+- Add prompt comparison, semantic diffing, and environment promotion checks.
 - Add tool permissions by agent, user role, environment, and risk level.
 - Enforce approval requirements server-side before high-risk tools can execute.
 - Add sandbox and production tool environments.
@@ -46,6 +48,8 @@ The current app has:
 
 - Add automated evaluation suites with test sets, thresholds, and regression tracking.
 - Support human scoring and adjudication for subjective outputs.
+- Store human feedback with reviewer identity, artifact references, and prompt version links.
+- Block prompt promotion when quality regression checks fail.
 - Capture metrics for latency, token use, cost, approval wait time, retries, and failure causes.
 - Export traces to an observability backend.
 - Add alerting for stuck runs, failed evaluations, and unusual tool usage.

@@ -123,6 +123,91 @@ Applies a deterministic mock approval decision.
 
 Invalid input returns HTTP 400 with clear validation errors.
 
+## Get Prompt
+
+`GET /api/prompts/[promptId]`
+
+Returns a mock prompt registry record, lifecycle explanation, evaluation trend, human feedback summary, and prompt improvement recommendation.
+
+### Success Response
+
+```json
+{
+  "ok": true,
+  "prompt": {
+    "id": "prompt_campaign_planner_v2",
+    "status": "active",
+    "version": "2.0.0-mock"
+  },
+  "lifecycle": "Campaign Planner 2.0.0-mock is active...",
+  "evaluationTrend": [],
+  "humanFeedback": {},
+  "recommendation": "Recommended improvement...",
+  "note": "Public-safe mock prompt metadata only. No production PromptLabTools prompt content was accessed."
+}
+```
+
+Missing prompt IDs return HTTP 400 with a clear error message.
+
+## Compare Prompt Versions
+
+`POST /api/prompts/[promptId]/compare`
+
+### JSON Request
+
+```json
+{
+  "compareToPromptId": "prompt_campaign_planner_v2"
+}
+```
+
+### Success Response
+
+```json
+{
+  "ok": true,
+  "comparison": {
+    "versionChange": "1.0.0-mock -> 2.0.0-mock",
+    "statusChange": "deprecated -> active",
+    "addedCriteria": ["risk"]
+  },
+  "note": "Deterministic mock prompt version comparison only."
+}
+```
+
+Invalid input returns HTTP 400.
+
+## Get Evaluation Run
+
+`GET /api/evaluations/[runId]`
+
+Returns a deterministic mock evaluation run with human feedback summary and recommendation. Missing run IDs return HTTP 400.
+
+## Check Evaluation Regression
+
+`POST /api/evaluations/regression-check`
+
+Accepts either historical run IDs:
+
+```json
+{
+  "baselineRunId": "eval_hist_planner_v1",
+  "candidateRunId": "eval_hist_planner_v2"
+}
+```
+
+Or explicit scores:
+
+```json
+{
+  "baselineScore": 91,
+  "candidateScore": 80,
+  "threshold": 5
+}
+```
+
+The route returns a deterministic regression decision and does not call an external evaluator.
+
 ## Public-Safe API Boundary
 
 The API routes do not:
@@ -143,6 +228,7 @@ Production API contracts would add:
 - Persistent run records.
 - Async execution status endpoints.
 - Approval decision endpoints.
+- Prompt lifecycle and evaluation regression endpoints.
 - Audit logs.
 - OpenAPI or JSON Schema definitions.
 - Rate limits and abuse protection.

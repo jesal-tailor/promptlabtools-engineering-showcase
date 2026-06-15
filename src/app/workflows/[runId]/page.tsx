@@ -3,12 +3,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StatusBadge } from "@/components/StatusBadge";
 import { mockApprovalSimulation } from "@/lib/approvals/approvalAuditLog";
+import { evaluationHistory } from "@/lib/evaluations/evaluationHistory";
+import { summariseHumanFeedbackForPrompt } from "@/lib/evaluations/humanFeedback";
 import { agents } from "@/lib/mockData/agents";
 import { approvals } from "@/lib/mockData/approvals";
 import { evaluations } from "@/lib/mockData/evaluations";
 import { prompts } from "@/lib/mockData/prompts";
 import { tools } from "@/lib/mockData/tools";
 import { workflowRuns } from "@/lib/mockData/workflowRuns";
+import { promptRegistry as runtimePromptRegistry } from "@/lib/prompts/promptRegistry";
 import {
   runCampaignPublishPackageWorkflow,
   runCampaignWorkflowWithApprovalDecision,
@@ -39,6 +42,11 @@ const runtimeSampleRunId = "runtime_sample";
 const sampleRuntimeResult = runCampaignPublishPackageWorkflow({
   campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
 });
+const activeRuntimePrompts = runtimePromptRegistry.filter((prompt) => prompt.status === "active");
+const runtimePlannerEvaluation = evaluationHistory.find(
+  (evaluation) => evaluation.id === "eval_hist_planner_v2",
+);
+const runtimePlannerFeedback = summariseHumanFeedbackForPrompt("prompt_campaign_planner_v2");
 const sampleApprovalOutcomes = [
   runCampaignWorkflowWithApprovalDecision({
     approvalDecision: "approved",
@@ -314,6 +322,41 @@ function RuntimeSampleResultPage({ result }: { result: CampaignWorkflowRunResult
               label="Mock cost"
               value={formatUsdEstimate(result.evaluationSummary.cost.estimatedCostUsd)}
             />
+          </div>
+        </section>
+
+        <section className="mt-10 rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-6">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-200">
+                Prompt and evaluation context
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+                Runtime output is tied back to versioned prompts and deterministic quality gates.
+              </h2>
+              <p className="mt-3 max-w-3xl leading-7 text-sky-100">
+                The sample result is still non-persistent mock execution. Active prompts are listed
+                as registry metadata, and the planner evaluation shows how a run would be checked
+                before human approval.
+              </p>
+            </div>
+            <div className="grid gap-3 text-sm text-sky-100 sm:grid-cols-3 lg:min-w-[32rem]">
+              <span>Active prompts: {activeRuntimePrompts.length}</span>
+              <span>Planner score: {runtimePlannerEvaluation?.overallScore ?? "n/a"}/100</span>
+              <span>Feedback items: {runtimePlannerFeedback.feedbackCount}</span>
+            </div>
+          </div>
+          <div className="mt-6 grid gap-3 md:grid-cols-3">
+            {activeRuntimePrompts.slice(0, 3).map((prompt) => (
+              <Link
+                key={prompt.id}
+                href={`/prompts/${prompt.id}`}
+                className="rounded-2xl border border-sky-200/20 bg-black/40 p-4 transition hover:bg-black/60"
+              >
+                <p className="font-semibold text-white">{prompt.name}</p>
+                <p className="mt-1 text-sm text-sky-100">{prompt.version}</p>
+              </Link>
+            ))}
           </div>
         </section>
 

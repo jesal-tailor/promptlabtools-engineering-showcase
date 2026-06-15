@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { StatusBadge } from "@/components/StatusBadge";
 import { mockApprovalSimulation } from "@/lib/approvals/approvalAuditLog";
+import { compareEvaluationRuns, evaluationHistory } from "@/lib/evaluations/evaluationHistory";
+import { detectQualityRegression } from "@/lib/evaluations/regressionChecks";
 import { agents } from "@/lib/mockData/agents";
 import { approvals } from "@/lib/mockData/approvals";
-import { evaluations } from "@/lib/mockData/evaluations";
-import { prompts } from "@/lib/mockData/prompts";
 import { workflowRuns } from "@/lib/mockData/workflowRuns";
+import { promptRegistry } from "@/lib/prompts/promptRegistry";
+import type { PromptLifecycleStatus } from "@/lib/prompts/promptTypes";
+import { comparePromptVersions } from "@/lib/prompts/promptVersioning";
 import {
   runCampaignPublishPackageWorkflow,
   runCampaignWorkflowWithApprovalDecision,
@@ -21,7 +24,6 @@ import {
   getWorkflowRunStatusTone,
   summariseWorkflowRuns,
 } from "@/lib/workflowDisplay";
-import type { PromptStatus } from "@/types/prompt";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -46,21 +48,30 @@ const needsChangesContinuation = runCampaignWorkflowWithApprovalDecision({
   decidedBy: "mock_reviewer@example.test",
   reviewerComment: "Needs clearer public-safe labels before mock approval.",
 });
+const promptVersionComparison = comparePromptVersions(
+  "prompt_campaign_planner_v1",
+  "prompt_campaign_planner_v2",
+);
+const evaluationComparison = compareEvaluationRuns("eval_hist_planner_v1", "eval_hist_planner_v2");
+const regressionCheck = detectQualityRegression(
+  evaluationComparison.baselineScore,
+  evaluationComparison.candidateScore,
+);
 const recentRuns = [...workflowRuns]
   .sort((left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt))
   .slice(0, 3);
 const recentActivity = getRecentTraceActivity(workflowRuns, 5);
 const averageEvaluationScore = Math.round(
-  evaluations.reduce((total, evaluation) => total + (evaluation.score / evaluation.maxScore) * 100, 0) /
-    evaluations.length,
+  evaluationHistory.reduce((total, evaluation) => total + evaluation.overallScore, 0) /
+    evaluationHistory.length,
 );
 
-const promptStatusCounts = prompts.reduce<Record<PromptStatus, number>>(
+const promptStatusCounts = promptRegistry.reduce<Record<PromptLifecycleStatus, number>>(
   (counts, prompt) => ({
     ...counts,
     [prompt.status]: counts[prompt.status] + 1,
   }),
-  { active: 0, deprecated: 0, draft: 0, review: 0 },
+  { active: 0, deprecated: 0, draft: 0 },
 );
 
 export default function DashboardPage() {
@@ -91,13 +102,51 @@ export default function DashboardPage() {
         <section className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
           <MetricCard label="Workflow runs" value={summary.totalRuns.toString()} detail={`${summary.completedRuns} completed`} />
           <MetricCard label="Pending approvals" value={pendingApprovals.length.toString()} detail="Human gates waiting" />
-          <MetricCard label="Prompt versions" value={prompts.length.toString()} detail={`${promptStatusCounts.active} active`} />
-          <MetricCard label="Average eval score" value={`${averageEvaluationScore}%`} detail={`${evaluations.length} suites`} />
+          <MetricCard label="Prompt versions" value={promptRegistry.length.toString()} detail={`${promptStatusCounts.active} active`} />
+          <MetricCard label="Average eval score" value={`${averageEvaluationScore}%`} detail={`${evaluationHistory.length} v2 runs`} />
           <MetricCard
             label="Mock spend"
             value={formatUsdEstimate(summary.estimatedCostUsd)}
             detail={`${formatTokenCount(summary.totalTokens)} tokens`}
           />
+        </section>
+
+        <section className="mt-10 rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-6">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-200">
+                Stage 5 quality layer
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+                Prompt lifecycle and deterministic evaluations are now wired into the showcase.
+              </h2>
+              <p className="mt-3 max-w-3xl leading-7 text-sky-100">
+                Planner prompt comparison shows {promptVersionComparison.versionChange} with{" "}
+                {promptVersionComparison.addedCriteria.length} new criteria. The evaluation trend improves by{" "}
+                {evaluationComparison.scoreDelta} points, and the regression check is{" "}
+                {regressionCheck.regressionDetected ? "flagged" : "clear"}.
+              </p>
+              <div className="mt-4 grid gap-3 text-sm text-sky-100 sm:grid-cols-3">
+                <span>Active prompts: {promptStatusCounts.active}</span>
+                <span>Draft prompts: {promptStatusCounts.draft}</span>
+                <span>Regression severity: {regressionCheck.severity}</span>
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/prompts/prompt_campaign_planner_v2"
+                className="rounded-full bg-sky-200 px-5 py-3 text-center text-sm font-semibold text-black transition hover:bg-sky-100"
+              >
+                Inspect planner prompt
+              </Link>
+              <Link
+                href="/evaluations/eval_hist_planner_v2"
+                className="rounded-full border border-sky-200/30 px-5 py-3 text-center text-sm font-semibold text-sky-50 transition hover:bg-sky-200/10"
+              >
+                Inspect evaluation
+              </Link>
+            </div>
+          </div>
         </section>
 
         <section className="mt-10 rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6">

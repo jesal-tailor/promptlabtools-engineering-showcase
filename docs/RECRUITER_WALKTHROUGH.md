@@ -31,6 +31,10 @@ The repo is deliberately safe for public viewing. It does not expose production 
    - Review the mock approval decisions, audit trail examples, and workflow action outcomes.
 6. Open `/prompts`, `/evaluations`, and `/tools`.
    - These pages show registry thinking and platform governance.
+7. Open `/prompts/prompt_campaign_planner_v2`.
+   - Review prompt lifecycle, version comparison, evaluation criteria, and human feedback.
+8. Open `/evaluations/eval_hist_planner_v2`.
+   - Review deterministic judge feedback, dimension scores, and regression context.
 
 ## What To Look For In The Code
 
@@ -41,6 +45,8 @@ The repo is deliberately safe for public viewing. It does not expose production 
 | Mock fixtures | `src/lib/mockData` |
 | Display helpers | `src/lib/workflowDisplay.ts` |
 | API route | `src/app/api/showcase-lead/route.ts` |
+| Prompt registry v2 | `src/lib/prompts` and `src/app/prompts` |
+| Evaluation engine v2 | `src/lib/evaluations` and `src/app/evaluations` |
 | Tests | `tests` |
 | CI | `.github/workflows/ci.yml` |
 
@@ -51,6 +57,8 @@ The repo is deliberately safe for public viewing. It does not expose production 
 - How approval decisions continue, stop, or return a workflow to drafting.
 - Why audit trails matter for public-facing or high-risk agentic actions.
 - Why prompt and tool registries matter for governance.
+- How prompt lifecycle, version comparison, and evaluation thresholds reduce change risk.
+- Why deterministic mock evaluators are useful in a public CV showcase.
 - How evaluation feedback can block or route workflow runs.
 - How TypeScript models can make platform behaviour clearer before a real backend exists.
 - How CI and tests protect a portfolio project from becoming only a visual demo.
