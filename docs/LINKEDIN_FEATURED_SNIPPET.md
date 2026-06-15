@@ -4,6 +4,8 @@
 
 PromptLabTools Engineering Showcase — a public-safe AI workflow control-plane demo built with Next.js, TypeScript, Vitest and GitHub Actions.
 
+Live preview: https://promptlabtools-engineering-showcase.vercel.app
+
 It demonstrates the platform layer around agentic workflows: deterministic mock agents, orchestration, human approval gates, audit trails, prompt versioning, evaluation scoring, quality regression checks, permissioned tool execution, adapter boundaries, repository-pattern persistence, run traces, health/readiness endpoints, deployment docs and CI quality gates.
 
 No secrets, customer data, real AI calls, real publishing, webhooks, databases, or production PromptLabTools logic are included.

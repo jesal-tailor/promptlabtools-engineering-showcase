@@ -8,6 +8,8 @@ This release packages the repository as a recruiter-ready AI Platform Engineerin
 
 The project is inspired by PromptLabTools-style workflow needs, but it does not contain private production code, production prompts, customer data, credentials, or live integrations.
 
+Live preview: [https://promptlabtools-engineering-showcase.vercel.app](https://promptlabtools-engineering-showcase.vercel.app/)
+
 ## Core Capabilities
 
 - Deterministic mock agent runtime.
@@ -74,7 +76,7 @@ For recruiter-facing guidance, see [APPLICATION_REVIEW_GUIDE.md](./APPLICATION_R
 - There are no real model-provider integrations.
 - Metrics, costs, token counts, traces, and tool results are mock examples.
 - Terraform files are planning scaffolds only.
-- Live preview URL is pending final Vercel deployment.
+- The live preview is a public-safe static/server-rendered showcase, not a production service.
 
 ## Future Productionisation Path
 

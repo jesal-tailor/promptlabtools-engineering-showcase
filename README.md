@@ -11,13 +11,13 @@ This repo demonstrates how I model and build the platform layer around AI workfl
 
 **Purpose:** Give recruiters, hiring managers, and technical interviewers a public-safe way to review AI Platform Engineering, Agentic Workflow, and Developer Platform skills without exposing production PromptLabTools systems.
 
-**Live Preview:** Pending final Vercel deployment URL
+**Live Preview:** [https://promptlabtools-engineering-showcase.vercel.app](https://promptlabtools-engineering-showcase.vercel.app/)
 
 ![Dashboard screenshot](./docs/assets/dashboard.png)
 
 ## Live Preview
 
-Live Preview: Pending final Vercel deployment URL
+Live Preview: [https://promptlabtools-engineering-showcase.vercel.app](https://promptlabtools-engineering-showcase.vercel.app/)
 
 Recommended review pages:
 
@@ -257,7 +257,6 @@ Implemented public-safe stages:
 
 Future public-safe improvements:
 
-- Replace the live preview placeholder with the final deployed Vercel URL.
 - Add a short demo video.
 - Add accessibility checks and visual regression coverage.
 - Add OpenAPI-style schema documentation for the mock routes.

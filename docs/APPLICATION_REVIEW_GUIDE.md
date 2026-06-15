@@ -6,6 +6,10 @@ This project gives recruiters and hiring managers a fast way to evaluate AI Plat
 
 The point is not to claim production traffic or live automation. The point is to show how an AI workflow platform can be modelled, governed, tested, documented, and prepared for deployment.
 
+## Live Preview
+
+[https://promptlabtools-engineering-showcase.vercel.app](https://promptlabtools-engineering-showcase.vercel.app/)
+
 ## Five-Minute Review Path
 
 1. Open `/dashboard`.

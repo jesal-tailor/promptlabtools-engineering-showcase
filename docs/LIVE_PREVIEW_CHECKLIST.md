@@ -1,6 +1,6 @@
 # Live Preview Checklist
 
-Live Preview: Pending final Vercel deployment URL
+Live Preview: [https://promptlabtools-engineering-showcase.vercel.app](https://promptlabtools-engineering-showcase.vercel.app/)
 
 Use this checklist before sharing the public preview with recruiters, hiring managers, or interviewers.
 
@@ -57,7 +57,7 @@ Major pages should show a public-safe runtime banner explaining that the showcas
 
 ## Final Share Step
 
-When the live preview is available, replace the README placeholder with the final Vercel URL and re-run:
+Before sharing the live preview or after changing deployment configuration, re-run:
 
 ```bash
 npm run check

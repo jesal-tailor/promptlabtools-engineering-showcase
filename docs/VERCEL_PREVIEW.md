@@ -4,9 +4,9 @@ The repo is ready for a public-safe Vercel preview deployment.
 
 ## Live Preview Status
 
-Live Preview: Pending final Vercel deployment URL
+Live Preview: [https://promptlabtools-engineering-showcase.vercel.app](https://promptlabtools-engineering-showcase.vercel.app/)
 
-When the final preview URL is available, replace the README placeholder and re-run the checks in [LIVE_PREVIEW_CHECKLIST.md](./LIVE_PREVIEW_CHECKLIST.md).
+Use [LIVE_PREVIEW_CHECKLIST.md](./LIVE_PREVIEW_CHECKLIST.md) before sharing the preview externally.
 
 ## Configuration
 

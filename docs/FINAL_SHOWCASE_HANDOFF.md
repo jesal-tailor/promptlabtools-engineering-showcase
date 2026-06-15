@@ -34,9 +34,9 @@ npm run check
 
 ## How To Review The Live Preview
 
-Live Preview: Pending final Vercel deployment URL
+Live Preview: [https://promptlabtools-engineering-showcase.vercel.app](https://promptlabtools-engineering-showcase.vercel.app/)
 
-When the live URL is available, open the same review path listed above. The expected behaviour is deterministic: the dashboard, runtime sample, registries, approval flows, tool audit records, health endpoint, and readiness endpoint should show mock data only.
+Open the same review path listed above. The expected behaviour is deterministic: the dashboard, runtime sample, registries, approval flows, tool audit records, health endpoint, and readiness endpoint should show mock data only.
 
 Use [LIVE_PREVIEW_CHECKLIST.md](./LIVE_PREVIEW_CHECKLIST.md) before sharing the preview externally.
 
