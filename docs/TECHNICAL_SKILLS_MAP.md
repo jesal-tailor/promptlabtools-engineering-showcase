@@ -17,7 +17,9 @@ This document maps the showcase to the engineering skills it is intended to evid
 | Skill | Evidence |
 | --- | --- |
 | Agent runtime patterns | `src/types/agent.ts` and `src/lib/mockData/agents.ts` |
+| Deterministic agent execution | `src/lib/agents` |
 | Workflow orchestration | `src/types/workflow.ts`, `src/lib/workflowState.ts`, `src/lib/mockData/workflowRuns.ts` |
+| Workflow execution engine | `src/lib/workflows` |
 | Human-in-the-loop gates | `src/types/approval.ts`, `src/lib/mockData/approvals.ts`, `/approvals` |
 | Prompt registry | `src/types/prompt.ts`, `src/lib/mockData/prompts.ts`, `/prompts` |
 | Tool governance | `src/types/tool.ts`, `src/lib/mockData/tools.ts`, `/tools` |
@@ -30,7 +32,9 @@ This document maps the showcase to the engineering skills it is intended to evid
 | --- | --- |
 | Unit testing | Vitest tests in `tests` |
 | State transition testing | `tests/workflowState.test.ts` |
+| Runtime state-machine testing | `tests/workflowStateMachine.test.ts` |
 | Input validation testing | `tests/validation.test.ts` |
+| API contract testing | `tests/api.workflowStart.test.ts` |
 | Fixture integrity testing | `tests/mockData.test.ts` |
 | Display helper testing | `tests/workflowDisplay.test.ts` |
 | CI quality gate | `.github/workflows/ci.yml` |

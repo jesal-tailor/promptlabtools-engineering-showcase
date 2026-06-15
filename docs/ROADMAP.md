@@ -9,6 +9,9 @@ This roadmap is public-safe and focuses on improving the engineering showcase ra
 - Typed workflow event and state model.
 - AI workflow control-plane dashboard.
 - Mock workflow runs with step-by-step traces.
+- Deterministic mock agent runtime.
+- `campaign_publish_package` workflow execution engine.
+- `POST /api/workflows/start` mock workflow start route.
 - Agent, prompt, tool, approval, and evaluation registries.
 - Human-in-the-loop approval states.
 - Mock token and cost estimates.

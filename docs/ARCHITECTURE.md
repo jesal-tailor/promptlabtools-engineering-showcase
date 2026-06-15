@@ -17,10 +17,13 @@ Dashboard and registry pages
 Typed mock data layer
   |
   v
-Workflow display helpers and state helpers
+Deterministic mock agent runtime
   |
   v
-Mock lead-capture API route
+Workflow runner, display helpers, and state helpers
+  |
+  v
+Mock API routes
   |
   v
 Validation, typed workflow events, and mock dispatch
@@ -30,8 +33,12 @@ Validation, typed workflow events, and mock dispatch
 
 - **Frontend:** App Router pages for dashboard, workflow list, workflow detail, approvals, prompts, evaluations, tools, architecture, and homepage.
 - **Control-plane fixtures:** Mock agents, workflow runs, approvals, prompts, evaluations, and tools under `src/lib/mockData`.
+- **Agent runtime:** Deterministic planner, drafting, QA, and approval agents under `src/lib/agents`.
+- **Workflow engine:** `campaign_publish_package` runner, template, and state machine under `src/lib/workflows`.
+- **Observability:** Trace event and mock cost helpers under `src/lib/observability`.
 - **Domain types:** Shared TypeScript models under `src/types`.
 - **API route:** `src/app/api/showcase-lead/route.ts`.
+- **Workflow start API:** `src/app/api/workflows/start/route.ts`.
 - **Validation:** `src/lib/validation.ts`.
 - **Workflow events:** `src/lib/workflowEvents.ts`.
 - **Workflow state transitions:** `src/lib/workflowState.ts`.

@@ -5,7 +5,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-d4af37.svg)](./LICENSE)
 
-PromptLabTools Engineering Showcase is a public-safe AI Platform Engineering portfolio project that demonstrates the shape of an agentic workflow control plane: typed workflow runs, mock agent runtimes, prompt and tool registries, human approval gates, evaluation scores, observability-style traces, API contracts, documentation, tests, and CI quality gates.
+PromptLabTools Engineering Showcase is a public-safe AI Platform Engineering portfolio project that demonstrates the shape of an agentic workflow control plane: typed workflow runs, deterministic mock agent runtimes, workflow execution, prompt and tool registries, human approval gates, evaluation scores, observability-style traces, API contracts, documentation, tests, and CI quality gates.
 
 This is a curated proof-of-work repository. It is not a copy of the private PromptLabTools production codebase.
 
@@ -21,9 +21,9 @@ This is a curated proof-of-work repository. It is not a copy of the private Prom
 
 1. Open `/dashboard` to see the mock AI workflow control plane.
 2. Open `/workflows` and select `run_101` to inspect a step-by-step run trace.
-3. Open `/approvals` to see pending, approved, rejected, and needs-changes human gates.
-4. Open `/prompts`, `/evaluations`, and `/tools` to review the registries behind the workflow.
-5. Submit the homepage mock lead form and inspect the JSON returned by `/api/showcase-lead`.
+3. Open `/workflows/runtime_sample` to inspect the deterministic Stage 3 runtime result.
+4. Use the mock start form on `/workflows` or POST JSON to `/api/workflows/start`.
+5. Open `/approvals`, `/prompts`, `/evaluations`, and `/tools` to review the registries behind the workflow.
 
 ## Architecture Summary
 
@@ -54,8 +54,9 @@ There are no real external API calls. Webhook-like destinations use `mock://` id
 | --- | --- |
 | AI platform engineering | Workflow runs, agents, prompts, tools, evaluations, approvals, and traces |
 | Agentic workflow design | Human gates, fail-closed mock publish step, registry-driven runtime metadata |
+| Mock runtime engineering | Deterministic planner, drafting, QA, and approval agents under `src/lib/agents` |
 | TypeScript modelling | Shared types under `src/types` and typed fixtures under `src/lib/mockData` |
-| API contract design | `src/app/api/showcase-lead/route.ts` with validation and safe JSON response |
+| API contract design | Mock lead and workflow-start API routes with validation and safe JSON responses |
 | Frontend engineering | App Router pages for dashboard, workflow detail, registries, and documentation links |
 | Quality engineering | Vitest tests for validation, workflow transitions, fixtures, and display helpers |
 | Security awareness | Explicit public-safe boundaries, no secrets, no customer data, no production scripts |
@@ -126,6 +127,10 @@ GitHub Actions runs lint, typecheck, tests, and build on push and pull request.
 - [Recruiter walkthrough](./docs/RECRUITER_WALKTHROUGH.md)
 - [Technical skills map](./docs/TECHNICAL_SKILLS_MAP.md)
 - [Productionisation plan](./docs/PRODUCTIONISATION_PLAN.md)
+- [Agent runtime](./docs/AGENT_RUNTIME.md)
+- [Workflow engine](./docs/WORKFLOW_ENGINE.md)
+- [Observability](./docs/OBSERVABILITY.md)
+- [API contracts](./docs/API_CONTRACTS.md)
 - [Architecture](./docs/ARCHITECTURE.md)
 - [Security and privacy](./docs/SECURITY_AND_PRIVACY.md)
 - [Engineering decisions](./docs/ENGINEERING_DECISIONS.md)
@@ -138,6 +143,7 @@ Stage 1 and Stage 2 are implemented first:
 
 - Stage 1: README positioning and reviewer documentation.
 - Stage 2: Dashboard prototype, workflow trace views, registries, mock data, and tests.
+- Stage 3: Deterministic mock agent runtime, workflow execution engine, trace events, cost estimates, workflow-start API, docs, and tests.
 
 Future public-safe stages:
 

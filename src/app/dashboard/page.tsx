@@ -6,6 +6,7 @@ import { approvals } from "@/lib/mockData/approvals";
 import { evaluations } from "@/lib/mockData/evaluations";
 import { prompts } from "@/lib/mockData/prompts";
 import { workflowRuns } from "@/lib/mockData/workflowRuns";
+import { runCampaignPublishPackageWorkflow } from "@/lib/workflows/workflowRunner";
 import {
   formatTokenCount,
   formatUsdEstimate,
@@ -26,6 +27,9 @@ export const metadata: Metadata = {
 const agentById = new Map(agents.map((agent) => [agent.id, agent]));
 const summary = summariseWorkflowRuns(workflowRuns);
 const pendingApprovals = approvals.filter((approval) => approval.status === "pending");
+const sampleRuntimeResult = runCampaignPublishPackageWorkflow({
+  campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
+});
 const recentRuns = [...workflowRuns]
   .sort((left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt))
   .slice(0, 3);
@@ -78,6 +82,38 @@ export default function DashboardPage() {
             value={formatUsdEstimate(summary.estimatedCostUsd)}
             detail={`${formatTokenCount(summary.totalTokens)} tokens`}
           />
+        </section>
+
+        <section className="mt-10 rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">
+                Stage 3 runtime engine
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+                Deterministic agent workflow execution is now available as a mock API.
+              </h2>
+              <p className="mt-3 max-w-3xl leading-7 text-amber-100">
+                The sample runtime executes planner, drafting, QA, approval gate, and preview publish
+                package steps with {sampleRuntimeResult.traceEvents.length} trace events and{" "}
+                {formatTokenCount(sampleRuntimeResult.evaluationSummary.cost.totalTokens)} mock tokens.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/workflows/runtime_sample"
+                className="rounded-full bg-amber-300 px-5 py-3 text-center text-sm font-semibold text-black transition hover:bg-amber-200"
+              >
+                View sample result
+              </Link>
+              <Link
+                href="/workflows"
+                className="rounded-full border border-amber-200/30 px-5 py-3 text-center text-sm font-semibold text-amber-50 transition hover:bg-amber-200/10"
+              >
+                Start from mock input
+              </Link>
+            </div>
+          </div>
         </section>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">

@@ -7,6 +7,7 @@ This repository is a public-safe AI Platform Engineering showcase for PromptLabT
 The app models a workflow operations surface:
 
 - Operators can inspect recent workflow runs.
+- A deterministic runtime can execute a sample campaign workflow from mock input.
 - Each run has typed trace steps.
 - Agents are represented as runtime roles with allowed tools and guardrails.
 - Prompts are versioned and owned by agents.
@@ -27,6 +28,7 @@ All data is static fixture data under `src/lib/mockData`.
 | `/prompts` | Prompt registry metadata with versions, owner agents, and statuses |
 | `/evaluations` | Evaluation results with scores, dimensions, and feedback |
 | `/tools` | Tool registry with allowed agents, risk levels, and approval requirements |
+| `/api/workflows/start` | Deterministic mock workflow start route |
 | `/api/showcase-lead` | Mock lead-capture route with validation and typed events |
 
 ## Public-Safe Design
