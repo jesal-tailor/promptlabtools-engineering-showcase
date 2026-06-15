@@ -7,31 +7,37 @@ This roadmap is public-safe and focuses on improving the engineering showcase ra
 - Next.js App Router showcase app.
 - Mock lead-capture API route.
 - Typed workflow event and state model.
-- Lightweight validation and workflow tests.
+- AI workflow control-plane dashboard.
+- Mock workflow runs with step-by-step traces.
+- Agent, prompt, tool, approval, and evaluation registries.
+- Human-in-the-loop approval states.
+- Mock token and cost estimates.
+- Validation, workflow-state, fixture-integrity, and display-helper tests.
 - CI quality gate with lint, typecheck, tests, and build.
-- Architecture, development, security, and engineering decision docs.
+- Architecture, security, recruiter, skills-map, and productionisation docs.
 
 ## Next
 
 - Add screenshots of the local app.
 - Add a short demo video or GIF.
-- Add a workflow dashboard prototype.
 - Add richer tests for API route behaviour.
-- Add observability examples with safe mock logs/events.
+- Add OpenAPI-style documentation for the mock API route.
+- Add accessibility checks to CI.
 - Add deployment preview link.
 
 ## Future
 
-- Add architecture diagram image generated from the text diagram.
-- Add OpenAPI-style documentation for the mock API route.
-- Add a safe event replay example.
-- Add mock queue adapter interface.
-- Add examples of approval/rejection workflow paths.
-- Add accessibility checks to CI.
+- Add safe event replay examples from fixture logs.
+- Add mock queue adapter interfaces.
+- Add example approval decision API contracts.
+- Add trace export examples using fixture spans only.
+- Add visual regression checks for the dashboard and registry pages.
 
 ## Non-Goals
 
 - Publishing private product logic.
-- Publishing customer/user data.
+- Publishing customer or user data.
 - Publishing production automation scripts.
+- Publishing production prompt bodies.
+- Calling real external AI providers or workflow tools.
 - Claiming active production AI agents or enterprise scale.

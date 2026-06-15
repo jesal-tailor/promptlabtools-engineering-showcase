@@ -1,11 +1,12 @@
 const layers = [
   "User",
   "Next.js Frontend",
-  "Workflow / Product Pages",
+  "Dashboard / Registry Pages",
   "Mock Lead Capture API",
   "Validation + Event Payload",
-  "Mock Workflow Orchestration Layer",
-  "Human Review / Automation Queue / Future AI Agents",
+  "Mock Workflow Orchestration",
+  "Agents / Prompts / Tools",
+  "Evaluations / Human Approval Gates",
 ];
 
 export function ArchitectureDiagram() {

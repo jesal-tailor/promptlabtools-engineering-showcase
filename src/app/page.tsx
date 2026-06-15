@@ -2,9 +2,10 @@ import Link from "next/link";
 import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
 
 const proofPoints = [
-  "Typed workflow events and state transitions",
+  "Typed workflow events, state transitions, and run traces",
+  "Agent runtime, prompt registry, and tool registry fixtures",
+  "Evaluation scores and human-in-the-loop approval gates",
   "Mock lead-capture API with validation and honeypot handling",
-  "Human-in-the-loop automation queue concept",
   "Next.js App Router, React, TypeScript, and Tailwind CSS",
   "CI quality gates for lint, typecheck, tests, and build",
   "Public-safe docs that avoid private product logic and secrets",
@@ -28,11 +29,14 @@ export default function HomePage() {
               This repo demonstrates safe, simplified PromptLabTools engineering patterns: platform architecture, API route design, workflow orchestration, lead-capture automation, and CI/CD quality gates.
             </p>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-              <Link href="/workflows" className="rounded-full bg-amber-300 px-6 py-3 text-center text-sm font-semibold text-black transition hover:bg-amber-200">
-                View workflow examples
+              <Link href="/dashboard" className="rounded-full bg-amber-300 px-6 py-3 text-center text-sm font-semibold text-black transition hover:bg-amber-200">
+                Open control-plane dashboard
               </Link>
-              <Link href="/architecture" className="rounded-full border border-white/15 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10">
-                Explore architecture
+              <Link href="/workflows" className="rounded-full border border-white/15 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10">
+                View workflow runs
+              </Link>
+              <Link href="/tools" className="rounded-full border border-white/15 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10">
+                Inspect tools
               </Link>
             </div>
           </div>

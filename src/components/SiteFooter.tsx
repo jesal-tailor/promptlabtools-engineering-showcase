@@ -5,10 +5,16 @@ export function SiteFooter() {
         <div>
           <p className="font-semibold text-zinc-300">PromptLabTools Engineering Showcase</p>
           <p className="mt-2 max-w-2xl leading-6">
-            Public-safe examples of AI workflow orchestration, lead-capture automation, platform architecture, and quality gates.
+            Public-safe examples of AI workflow orchestration, agent runtime patterns, prompt and tool registries, evaluation gates, observability traces, and quality checks.
           </p>
         </div>
         <div className="flex flex-wrap gap-4">
+          <a href="/dashboard" className="hover:text-white">
+            Dashboard
+          </a>
+          <a href="/tools" className="hover:text-white">
+            Tools
+          </a>
           <a href="https://www.promptlabtools.com" className="hover:text-white">
             Website
           </a>

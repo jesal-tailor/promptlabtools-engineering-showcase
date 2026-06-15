@@ -1,0 +1,207 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { StatusBadge } from "@/components/StatusBadge";
+import { agents } from "@/lib/mockData/agents";
+import { approvals } from "@/lib/mockData/approvals";
+import { evaluations } from "@/lib/mockData/evaluations";
+import { prompts } from "@/lib/mockData/prompts";
+import { workflowRuns } from "@/lib/mockData/workflowRuns";
+import {
+  formatTokenCount,
+  formatUsdEstimate,
+  getRecentTraceActivity,
+  getTraceStepStatusLabel,
+  getTraceStepStatusTone,
+  getWorkflowRunStatusLabel,
+  getWorkflowRunStatusTone,
+  summariseWorkflowRuns,
+} from "@/lib/workflowDisplay";
+import type { PromptStatus } from "@/types/prompt";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Mock AI workflow control-plane dashboard for the public engineering showcase.",
+};
+
+const agentById = new Map(agents.map((agent) => [agent.id, agent]));
+const summary = summariseWorkflowRuns(workflowRuns);
+const pendingApprovals = approvals.filter((approval) => approval.status === "pending");
+const recentRuns = [...workflowRuns]
+  .sort((left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt))
+  .slice(0, 3);
+const recentActivity = getRecentTraceActivity(workflowRuns, 5);
+const averageEvaluationScore = Math.round(
+  evaluations.reduce((total, evaluation) => total + (evaluation.score / evaluation.maxScore) * 100, 0) /
+    evaluations.length,
+);
+
+const promptStatusCounts = prompts.reduce<Record<PromptStatus, number>>(
+  (counts, prompt) => ({
+    ...counts,
+    [prompt.status]: counts[prompt.status] + 1,
+  }),
+  { active: 0, deprecated: 0, draft: 0, review: 0 },
+);
+
+export default function DashboardPage() {
+  return (
+    <main className="bg-black px-6 py-16 text-white">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
+              AI workflow control plane
+            </p>
+            <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl">
+              Mock runtime overview for agentic workflow operations.
+            </h1>
+            <p className="mt-5 max-w-3xl leading-8 text-zinc-400">
+              This dashboard uses local fixtures only. It shows how workflow state, prompt versions,
+              evaluations, approvals, and trace activity can be exposed without touching production systems.
+            </p>
+          </div>
+          <Link
+            href="/workflows"
+            className="rounded-full bg-amber-300 px-5 py-3 text-center text-sm font-semibold text-black transition hover:bg-amber-200"
+          >
+            Inspect workflow runs
+          </Link>
+        </div>
+
+        <section className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+          <MetricCard label="Workflow runs" value={summary.totalRuns.toString()} detail={`${summary.completedRuns} completed`} />
+          <MetricCard label="Pending approvals" value={pendingApprovals.length.toString()} detail="Human gates waiting" />
+          <MetricCard label="Prompt versions" value={prompts.length.toString()} detail={`${promptStatusCounts.active} active`} />
+          <MetricCard label="Average eval score" value={`${averageEvaluationScore}%`} detail={`${evaluations.length} suites`} />
+          <MetricCard
+            label="Mock spend"
+            value={formatUsdEstimate(summary.estimatedCostUsd)}
+            detail={`${formatTokenCount(summary.totalTokens)} tokens`}
+          />
+        </section>
+
+        <div className="mt-10 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <section className="rounded-[2rem] border border-white/10 bg-zinc-950 p-6">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-300">
+                  Recent workflow runs
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight">Runtime queue</h2>
+              </div>
+              <Link href="/workflows" className="text-sm font-semibold text-amber-200 hover:text-amber-100">
+                View all
+              </Link>
+            </div>
+            <div className="mt-6 grid gap-4">
+              {recentRuns.map((run) => (
+                <Link
+                  key={run.id}
+                  href={`/workflows/${run.id}`}
+                  className="rounded-3xl border border-white/10 bg-black p-5 transition hover:border-amber-300/40"
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">{run.workflowKey}</p>
+                      <h3 className="mt-2 text-lg font-semibold text-white">{run.title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-zinc-400">{run.description}</p>
+                    </div>
+                    <StatusBadge
+                      label={getWorkflowRunStatusLabel(run.status)}
+                      tone={getWorkflowRunStatusTone(run.status)}
+                    />
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2 text-xs text-zinc-500">
+                    <span>{formatTokenCount(run.metrics.promptTokens + run.metrics.completionTokens)} tokens</span>
+                    <span>{formatUsdEstimate(run.metrics.estimatedCostUsd)}</span>
+                    <span>{run.trace.length} trace steps</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-[2rem] border border-white/10 bg-zinc-950 p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-300">
+              Pending approvals
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight">Human gates</h2>
+            <div className="mt-6 grid gap-4">
+              {pendingApprovals.map((approval) => {
+                const requester = agentById.get(approval.requesterAgentId);
+
+                return (
+                  <article key={approval.id} className="rounded-3xl border border-amber-300/20 bg-black p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <h3 className="font-semibold text-white">{approval.title}</h3>
+                        <p className="mt-2 text-sm leading-6 text-zinc-400">{approval.reason}</p>
+                      </div>
+                      <StatusBadge label={approval.risk} tone="warning" />
+                    </div>
+                    <p className="mt-4 text-xs uppercase tracking-[0.18em] text-zinc-500">
+                      Requested by {requester?.name ?? approval.requesterAgentId}
+                    </p>
+                  </article>
+                );
+              })}
+            </div>
+            <Link
+              href="/approvals"
+              className="mt-6 inline-flex rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              Open approval queue
+            </Link>
+          </section>
+        </div>
+
+        <section className="mt-10 rounded-[2rem] border border-white/10 bg-zinc-950 p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-300">
+                Recent trace-style activity
+              </p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight">Observable run history</h2>
+            </div>
+            <p className="text-sm text-zinc-500">Fixture traces only. No private logs are present.</p>
+          </div>
+          <div className="mt-6 grid gap-4">
+            {recentActivity.map((activity) => (
+              <article key={activity.id} className="rounded-3xl border border-white/10 bg-black p-5">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <Link
+                      href={`/workflows/${activity.runId}`}
+                      className="text-sm font-semibold text-amber-200 hover:text-amber-100"
+                    >
+                      {activity.runTitle}
+                    </Link>
+                    <h3 className="mt-2 text-lg font-semibold text-white">{activity.stepName}</h3>
+                    <p className="mt-2 text-sm leading-6 text-zinc-400">{activity.summary}</p>
+                  </div>
+                  <StatusBadge
+                    label={getTraceStepStatusLabel(activity.status)}
+                    tone={getTraceStepStatusTone(activity.status)}
+                  />
+                </div>
+                <time className="mt-4 block text-xs uppercase tracking-[0.18em] text-zinc-500">
+                  {new Date(activity.timestamp).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}
+                </time>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
+
+function MetricCard({ label, value, detail }: { label: string; value: string; detail: string }) {
+  return (
+    <article className="rounded-3xl border border-white/10 bg-zinc-950 p-5">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{label}</p>
+      <p className="mt-3 text-3xl font-semibold tracking-tight text-white">{value}</p>
+      <p className="mt-2 text-sm text-zinc-400">{detail}</p>
+    </article>
+  );
+}

@@ -5,91 +5,74 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-d4af37.svg)](./LICENSE)
 
-A public engineering showcase demonstrating how PromptLabTools approaches AI-assisted workflow systems, lead-capture automation, platform architecture, and operational tooling.
+PromptLabTools Engineering Showcase is a public-safe AI Platform Engineering portfolio project that demonstrates the shape of an agentic workflow control plane: typed workflow runs, mock agent runtimes, prompt and tool registries, human approval gates, evaluation scores, observability-style traces, API contracts, documentation, tests, and CI quality gates.
 
-This is a curated proof-of-work repository, not a full copy of the private PromptLabTools product codebase.
+This is a curated proof-of-work repository. It is not a copy of the private PromptLabTools production codebase.
 
-## Overview
+## What This Repo Proves
 
-PromptLabTools Engineering Showcase is a safe public example of the engineering patterns behind an AI workflow platform:
+- Ability to model AI workflow orchestration with typed state, events, run traces, and approval gates.
+- Product engineering judgement across Next.js App Router, React, TypeScript, Tailwind CSS, API routes, and tests.
+- Public-safe platform thinking: mock integrations, no real secrets, no production webhooks, no customer data, and no private business logic.
+- Documentation discipline for recruiters, engineering reviewers, security boundaries, architecture, and productionisation planning.
+- Quality baseline with ESLint, TypeScript strict checks, Vitest, production build, and GitHub Actions CI.
 
-- Product/workflow pages built with Next.js App Router.
-- Typed API route for mock lead capture.
-- Validation, honeypot handling, and typed workflow event payloads.
-- Mock orchestration state transitions for human-in-the-loop automation.
-- CI/CD quality gates for linting, type checking, tests, and builds.
-- Documentation explaining architecture, security boundaries, and engineering decisions.
+## Five-Minute Demo Path
 
-## Why This Exists
+1. Open `/dashboard` to see the mock AI workflow control plane.
+2. Open `/workflows` and select `run_101` to inspect a step-by-step run trace.
+3. Open `/approvals` to see pending, approved, rejected, and needs-changes human gates.
+4. Open `/prompts`, `/evaluations`, and `/tools` to review the registries behind the workflow.
+5. Submit the homepage mock lead form and inspect the JSON returned by `/api/showcase-lead`.
 
-The private PromptLabTools product repository remains private because it may contain business-sensitive product logic, funnel implementation, production automation details, and deployment configuration.
-
-This public repository provides a safe technical view of the engineering approach without exposing secrets, customer data, proprietary workflow logic, or commercially sensitive implementation details.
-
-## What This Demonstrates
-
-- Next.js App Router and modern React application structure.
-- TypeScript domain types for workflow states, events, and lead payloads.
-- API route design with request parsing, validation, honeypot checks, and safe JSON responses.
-- Mock lead capture and mock workflow dispatch with no external service calls.
-- Workflow orchestration patterns including state transitions and human review checkpoints.
-- Developer tooling with ESLint, TypeScript checks, Vitest tests, and GitHub Actions CI.
-- Documentation maturity suitable for engineering review and portfolio assessment.
-- AI platform engineering thinking without claiming enterprise scale or production AI agents.
-
-## Live Product
-
-The live PromptLabTools product surface is available at:
-
-- Website: [https://www.promptlabtools.com](https://www.promptlabtools.com)
-- Free Guide: [https://www.promptlabtools.com/free-guide](https://www.promptlabtools.com/free-guide)
-
-## Tech Stack
-
-| Area | Technology |
-| --- | --- |
-| Framework | Next.js App Router |
-| Language | TypeScript |
-| UI | React, Tailwind CSS |
-| Runtime | Node.js |
-| API layer | Next.js Route Handlers |
-| Tests | Vitest |
-| CI/CD | GitHub Actions |
-| Integrations | Mock webhook/event handling only |
-
-## Architecture
+## Architecture Summary
 
 ```text
 User
-  ↓
-Next.js Frontend
-  ↓
-Workflow/Product Pages
-  ↓
-Mock Lead Capture API
-  ↓
-Validation + Event Payload
-  ↓
-Mock Workflow Orchestration Layer
-  ↓
-Human Review / Automation Queue / Future AI Agents
+  |
+  v
+Next.js App Router pages
+  |
+  v
+Mock workflow control-plane UI
+  |
+  v
+Typed local fixtures and helper functions
+  |
+  v
+Mock API route with validation and typed workflow events
+  |
+  v
+Human approval gates, evaluation records, and trace views
 ```
 
-See [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) for more detail.
+There are no real external API calls. Webhook-like destinations use `mock://` identifiers only.
 
-## Repository Structure
+## Skills Demonstrated
 
-```text
-.github/workflows/       GitHub Actions CI quality gate
-docs/                    Architecture, development, roadmap, security, screenshots
-src/app/                 Next.js App Router pages and API route examples
-src/components/          Reusable UI components for the showcase app
-src/lib/                 Validation, mock lead capture, workflow events/state
-src/types/               Shared workflow and lead-capture TypeScript types
-tests/                   Lightweight validation and state-transition tests
-```
+| Area | Evidence |
+| --- | --- |
+| AI platform engineering | Workflow runs, agents, prompts, tools, evaluations, approvals, and traces |
+| Agentic workflow design | Human gates, fail-closed mock publish step, registry-driven runtime metadata |
+| TypeScript modelling | Shared types under `src/types` and typed fixtures under `src/lib/mockData` |
+| API contract design | `src/app/api/showcase-lead/route.ts` with validation and safe JSON response |
+| Frontend engineering | App Router pages for dashboard, workflow detail, registries, and documentation links |
+| Quality engineering | Vitest tests for validation, workflow transitions, fixtures, and display helpers |
+| Security awareness | Explicit public-safe boundaries, no secrets, no customer data, no production scripts |
 
-## Getting Started
+## Public-Safe Boundaries
+
+This repository intentionally excludes:
+
+- Real PromptLabTools production secrets.
+- Real webhook URLs, credentials, API keys, or deployment configuration.
+- Customer data, private analytics, real lead data, or user exports.
+- Proprietary PromptLabTools prompts, scoring rules, funnel logic, or automation scripts.
+- Real model-provider calls or external service calls.
+
+All workflow runs, agents, prompts, tools, approvals, evaluations, costs, tokens, and trace entries are mock data.
+
+## How To Run Locally
 
 Prerequisites:
 
@@ -102,7 +85,7 @@ Install dependencies:
 npm install
 ```
 
-Run locally:
+Run the app:
 
 ```bash
 npm run dev
@@ -110,49 +93,60 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Environment Variables
-
-This repo uses `.env.example` only and does not require real secrets.
+Optional local env file:
 
 ```bash
 cp .env.example .env.local
 ```
 
-The mock API route does not make external calls. Any webhook-like values are placeholders for local experimentation only.
+The app does not require real environment variables for the showcase flow.
 
 ## Quality Checks
+
+Run individual checks:
 
 ```bash
 npm run lint
 npm run typecheck
 npm run test
 npm run build
+```
+
+Run the full local quality gate:
+
+```bash
 npm run check
 ```
 
-`npm run check` runs the complete local quality gate.
+GitHub Actions runs lint, typecheck, tests, and build on push and pull request.
 
-## Screenshots
+## Documentation
 
-Screenshot placeholders and capture guidance are documented in [docs/SCREENSHOTS.md](./docs/SCREENSHOTS.md).
+- [Showcase overview](./docs/SHOWCASE_OVERVIEW.md)
+- [Recruiter walkthrough](./docs/RECRUITER_WALKTHROUGH.md)
+- [Technical skills map](./docs/TECHNICAL_SKILLS_MAP.md)
+- [Productionisation plan](./docs/PRODUCTIONISATION_PLAN.md)
+- [Architecture](./docs/ARCHITECTURE.md)
+- [Security and privacy](./docs/SECURITY_AND_PRIVACY.md)
+- [Engineering decisions](./docs/ENGINEERING_DECISIONS.md)
+- [Development](./docs/DEVELOPMENT.md)
+- [Roadmap](./docs/ROADMAP.md)
 
 ## Roadmap
 
-The public-safe roadmap is documented in [docs/ROADMAP.md](./docs/ROADMAP.md). It focuses on engineering showcase improvements such as screenshots, demo video, richer tests, observability examples, and preview deployment.
+Stage 1 and Stage 2 are implemented first:
 
-## Security & Privacy
+- Stage 1: README positioning and reviewer documentation.
+- Stage 2: Dashboard prototype, workflow trace views, registries, mock data, and tests.
 
-This repository intentionally excludes:
+Future public-safe stages:
 
-- Real secrets or `.env` files.
-- Production webhook URLs.
-- Customer or user data.
-- Private PromptLabTools business strategy.
-- Commercially sensitive funnel logic.
-- Private OpenClaw credentials or configuration.
-- Production automation scripts.
-
-See [docs/SECURITY_AND_PRIVACY.md](./docs/SECURITY_AND_PRIVACY.md).
+- Add richer API contract examples for workflow run creation and approval decisions.
+- Add screenshots and a short demo video.
+- Add accessibility checks and visual regression coverage.
+- Add OpenAPI-style schema documentation for the mock routes.
+- Add example observability dashboards using fixture logs only.
+- Add optional preview deployment with no secrets and no real integrations.
 
 ## Related Links
 
