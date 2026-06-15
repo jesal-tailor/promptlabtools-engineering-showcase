@@ -7,11 +7,33 @@
 
 Public-safe AI Platform Engineering showcase for an agentic workflow control plane.
 
-This repo demonstrates how I model and build the platform layer around AI workflows: deterministic mock agents, orchestration, human approval gates, prompt and tool governance, evaluation checks, trace-style observability, repository boundaries, API contracts, tests, docs, and CI. It is a curated proof-of-work project, not a copy of the private PromptLabTools production codebase.
+This repo demonstrates how I model and build the platform layer around AI workflows: deterministic mock agents, orchestration, human approval gates, prompt and tool governance, evaluation checks, trace-style observability, repository boundaries, API contracts, deployment readiness, tests, docs, and CI. It is a curated proof-of-work project, not a copy of the private PromptLabTools production codebase.
 
-**Live Preview:** Not deployed yet. This repo is deployment-ready for a public-safe Vercel preview.
+**Purpose:** Give recruiters, hiring managers, and technical interviewers a public-safe way to review AI Platform Engineering, Agentic Workflow, and Developer Platform skills without exposing production PromptLabTools systems.
+
+**Live Preview:** Pending final Vercel deployment URL
 
 ![Dashboard screenshot](./docs/assets/dashboard.png)
+
+## Live Preview
+
+Live Preview: Pending final Vercel deployment URL
+
+Recommended review pages:
+
+- `/`
+- `/dashboard`
+- `/workflows`
+- `/workflows/runtime_sample`
+- `/approvals`
+- `/prompts`
+- `/evaluations`
+- `/tools`
+- `/tools/audit`
+- `/api/health`
+- `/api/readiness`
+
+Use [docs/LIVE_PREVIEW_CHECKLIST.md](./docs/LIVE_PREVIEW_CHECKLIST.md) before sharing a deployed preview.
 
 ## What This Demonstrates
 
@@ -29,7 +51,7 @@ This repo demonstrates how I model and build the platform layer around AI workfl
 
 **60-second read:** This is a working mock control plane for safe AI automation. It proves I can design the runtime, governance, evaluation, observability, and persistence boundaries around agent workflows without exposing private production systems.
 
-**Best demo path:** `/dashboard` -> `/workflows/runtime_sample` -> `/approvals/gate_launch-a-public-safe-ai-workflow-showcase-for-cv_publish` -> `/prompts` -> `/evaluations/eval_hist_planner_v2` -> `/tools` -> `/tools/audit`.
+**Best demo path:** `/dashboard` -> `/workflows` -> `/workflows/runtime_sample` -> `/approvals` -> `/prompts` -> `/evaluations` -> `/tools` -> `/tools/audit` -> `/api/health` -> `/api/readiness`.
 
 ## Screenshots
 
@@ -174,6 +196,12 @@ See [docs/WHAT_IS_REAL_VS_MOCK.md](./docs/WHAT_IS_REAL_VS_MOCK.md) for the full 
 ## Documentation
 
 - [Hiring manager summary](./docs/HIRING_MANAGER_SUMMARY.md)
+- [Final showcase handoff](./docs/FINAL_SHOWCASE_HANDOFF.md)
+- [Application review guide](./docs/APPLICATION_REVIEW_GUIDE.md)
+- [Live preview checklist](./docs/LIVE_PREVIEW_CHECKLIST.md)
+- [Release notes](./docs/RELEASE_NOTES.md)
+- [CV project snippet](./docs/CV_PROJECT_SNIPPET.md)
+- [LinkedIn featured snippet](./docs/LINKEDIN_FEATURED_SNIPPET.md)
 - [Demo script](./docs/DEMO_SCRIPT.md)
 - [Interview talk track](./docs/INTERVIEW_TALK_TRACK.md)
 - [What is real vs mock](./docs/WHAT_IS_REAL_VS_MOCK.md)
@@ -225,9 +253,11 @@ Implemented public-safe stages:
 - Stage 7: Persistence boundary, repository interfaces, public-safe in-memory adapters, runtime/API integration, docs, and tests.
 - Stage 8: Recruiter-ready README, demo docs, screenshot assets, architecture diagram, and UI copy polish.
 - Stage 9: Deployment readiness, health/readiness endpoints, Vercel docs, cloud architecture, ops runbook, and Terraform productionisation scaffold.
+- Stage 10: Public preview release preparation, final showcase handoff, application review guide, release notes, and CV/LinkedIn snippets.
 
 Future public-safe improvements:
 
+- Replace the live preview placeholder with the final deployed Vercel URL.
 - Add a short demo video.
 - Add accessibility checks and visual regression coverage.
 - Add OpenAPI-style schema documentation for the mock routes.

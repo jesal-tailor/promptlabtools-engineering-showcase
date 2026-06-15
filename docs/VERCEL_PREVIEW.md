@@ -4,7 +4,9 @@ The repo is ready for a public-safe Vercel preview deployment.
 
 ## Live Preview Status
 
-Live Preview: Not deployed yet. This repo is deployment-ready for a public-safe Vercel preview.
+Live Preview: Pending final Vercel deployment URL
+
+When the final preview URL is available, replace the README placeholder and re-run the checks in [LIVE_PREVIEW_CHECKLIST.md](./LIVE_PREVIEW_CHECKLIST.md).
 
 ## Configuration
 
