@@ -35,10 +35,12 @@ Validation, typed workflow events, and mock dispatch
 - **Control-plane fixtures:** Mock agents, workflow runs, approvals, prompts, evaluations, and tools under `src/lib/mockData`.
 - **Agent runtime:** Deterministic planner, drafting, QA, and approval agents under `src/lib/agents`.
 - **Workflow engine:** `campaign_publish_package` runner, template, and state machine under `src/lib/workflows`.
+- **Approval governance:** Approval policy, state machine, and audit event helpers under `src/lib/approvals`.
 - **Observability:** Trace event and mock cost helpers under `src/lib/observability`.
 - **Domain types:** Shared TypeScript models under `src/types`.
 - **API route:** `src/app/api/showcase-lead/route.ts`.
 - **Workflow start API:** `src/app/api/workflows/start/route.ts`.
+- **Approval decision API:** `src/app/api/approvals/[approvalId]/decide/route.ts`.
 - **Validation:** `src/lib/validation.ts`.
 - **Workflow events:** `src/lib/workflowEvents.ts`.
 - **Workflow state transitions:** `src/lib/workflowState.ts`.

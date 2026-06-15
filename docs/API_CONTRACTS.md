@@ -74,6 +74,55 @@ Invalid input returns HTTP 400.
 
 This existing route remains a mock lead-capture example. It validates input, creates typed workflow events, and returns JSON without calling external services.
 
+## Decide Approval
+
+`POST /api/approvals/[approvalId]/decide`
+
+Applies a deterministic mock approval decision.
+
+### JSON Request
+
+```json
+{
+  "decision": "approved",
+  "reviewerComment": "Approved for public-safe mock preview.",
+  "decidedBy": "mock_reviewer@example.test",
+  "runId": "mock_run_campaign_publish_package_launch-a-public-safe-ai-workflow-showcase-for-cv",
+  "stepId": "approval_gate"
+}
+```
+
+`runId` and `stepId` have safe mock defaults if omitted.
+
+### Validation
+
+- `decision` must be `approved`, `rejected`, or `needs_changes`.
+- `reviewerComment` must explain the decision.
+- `decidedBy` must identify the mock reviewer.
+- `decidedAt`, if supplied, must be date-compatible.
+
+### Success Response
+
+```json
+{
+  "ok": true,
+  "approvalId": "approval_test",
+  "result": {
+    "previousStatus": "pending_review",
+    "newStatus": "approved",
+    "workflowAction": "continue_workflow",
+    "auditEvent": {
+      "type": "approval_decision_recorded"
+    }
+  },
+  "note": "Public-safe mock governance only. No database, identity provider, webhook, or production workflow was called."
+}
+```
+
+### Error Response
+
+Invalid input returns HTTP 400 with clear validation errors.
+
 ## Public-Safe API Boundary
 
 The API routes do not:

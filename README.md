@@ -129,6 +129,9 @@ GitHub Actions runs lint, typecheck, tests, and build on push and pull request.
 - [Productionisation plan](./docs/PRODUCTIONISATION_PLAN.md)
 - [Agent runtime](./docs/AGENT_RUNTIME.md)
 - [Workflow engine](./docs/WORKFLOW_ENGINE.md)
+- [Governance model](./docs/GOVERNANCE_MODEL.md)
+- [Human approval flow](./docs/HUMAN_APPROVAL_FLOW.md)
+- [Audit trail](./docs/AUDIT_TRAIL.md)
 - [Observability](./docs/OBSERVABILITY.md)
 - [API contracts](./docs/API_CONTRACTS.md)
 - [Architecture](./docs/ARCHITECTURE.md)
@@ -144,6 +147,7 @@ Stage 1 and Stage 2 are implemented first:
 - Stage 1: README positioning and reviewer documentation.
 - Stage 2: Dashboard prototype, workflow trace views, registries, mock data, and tests.
 - Stage 3: Deterministic mock agent runtime, workflow execution engine, trace events, cost estimates, workflow-start API, docs, and tests.
+- Stage 4: Human approval governance, audit events, approval decision API, and continuation paths for approved, rejected, and needs-changes decisions.
 
 Future public-safe stages:
 

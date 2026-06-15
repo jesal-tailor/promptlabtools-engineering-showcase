@@ -14,6 +14,7 @@ This roadmap is public-safe and focuses on improving the engineering showcase ra
 - `POST /api/workflows/start` mock workflow start route.
 - Agent, prompt, tool, approval, and evaluation registries.
 - Human-in-the-loop approval states.
+- Approval governance policy, decision API, audit events, and continuation outcomes.
 - Mock token and cost estimates.
 - Validation, workflow-state, fixture-integrity, and display-helper tests.
 - CI quality gate with lint, typecheck, tests, and build.

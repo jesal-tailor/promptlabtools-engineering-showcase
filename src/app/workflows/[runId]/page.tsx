@@ -2,14 +2,21 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StatusBadge } from "@/components/StatusBadge";
+import { mockApprovalSimulation } from "@/lib/approvals/approvalAuditLog";
 import { agents } from "@/lib/mockData/agents";
 import { approvals } from "@/lib/mockData/approvals";
 import { evaluations } from "@/lib/mockData/evaluations";
 import { prompts } from "@/lib/mockData/prompts";
 import { tools } from "@/lib/mockData/tools";
 import { workflowRuns } from "@/lib/mockData/workflowRuns";
-import { runCampaignPublishPackageWorkflow } from "@/lib/workflows/workflowRunner";
-import type { CampaignWorkflowRunResult } from "@/lib/workflows/workflowTypes";
+import {
+  runCampaignPublishPackageWorkflow,
+  runCampaignWorkflowWithApprovalDecision,
+} from "@/lib/workflows/workflowRunner";
+import type {
+  CampaignWorkflowContinuationResult,
+  CampaignWorkflowRunResult,
+} from "@/lib/workflows/workflowTypes";
 import {
   formatTokenCount,
   formatUsdEstimate,
@@ -32,6 +39,26 @@ const runtimeSampleRunId = "runtime_sample";
 const sampleRuntimeResult = runCampaignPublishPackageWorkflow({
   campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
 });
+const sampleApprovalOutcomes = [
+  runCampaignWorkflowWithApprovalDecision({
+    approvalDecision: "approved",
+    campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
+    decidedBy: "mock_reviewer@example.test",
+    reviewerComment: "Approved for mock preview because public-safe labelling is clear.",
+  }),
+  runCampaignWorkflowWithApprovalDecision({
+    approvalDecision: "rejected",
+    campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
+    decidedBy: "mock_reviewer@example.test",
+    reviewerComment: "Rejected because the mock reviewer wants the publish-like action stopped.",
+  }),
+  runCampaignWorkflowWithApprovalDecision({
+    approvalDecision: "needs_changes",
+    campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
+    decidedBy: "mock_reviewer@example.test",
+    reviewerComment: "Needs clearer public-safe labels before approval.",
+  }),
+];
 
 function isDefined<T>(value: T | undefined): value is T {
   return value !== undefined;
@@ -341,6 +368,8 @@ function RuntimeSampleResultPage({ result }: { result: CampaignWorkflowRunResult
           </aside>
         </div>
 
+        <ApprovalOutcomeSection outcomes={sampleApprovalOutcomes} />
+
         <section className="mt-10 rounded-[2rem] border border-white/10 bg-zinc-950 p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-300">
             Runtime trace events
@@ -368,5 +397,56 @@ function RuntimeSampleResultPage({ result }: { result: CampaignWorkflowRunResult
         </section>
       </div>
     </main>
+  );
+}
+
+function ApprovalOutcomeSection({ outcomes }: { outcomes: CampaignWorkflowContinuationResult[] }) {
+  return (
+    <section className="mt-10 rounded-[2rem] border border-white/10 bg-zinc-950 p-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-300">
+            Mock public-safe approval simulation
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight">Workflow continuation outcomes</h2>
+        </div>
+        <Link
+          href={`/approvals/${mockApprovalSimulation.approvalId}`}
+          className="rounded-full border border-white/10 px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-white/10"
+        >
+          Open approval detail
+        </Link>
+      </div>
+      <div className="mt-6 grid gap-4 lg:grid-cols-3">
+        {outcomes.map((outcome) => (
+          <article key={outcome.approvalDecisionPayload.decision} className="rounded-3xl border border-white/10 bg-black p-5">
+            <StatusBadge
+              label={outcome.workflowAction}
+              tone={
+                outcome.workflowAction === "continue_workflow"
+                  ? "success"
+                  : outcome.workflowAction === "stop_workflow"
+                    ? "danger"
+                    : "warning"
+              }
+            />
+            <h3 className="mt-4 text-xl font-semibold text-white">
+              {outcome.approvalDecisionPayload.decision}
+            </h3>
+            <p className="mt-3 text-sm leading-6 text-zinc-400">
+              {outcome.approvalDecisionPayload.reviewerComment}
+            </p>
+            <div className="mt-4 grid gap-2 text-sm text-zinc-500">
+              <span>New status: {outcome.approvalDecisionResult.newStatus}</span>
+              <span>Audit: {outcome.approvalDecisionResult.auditEvent.id}</span>
+              <span>
+                Package: {outcome.finalPublishPackage ? outcome.finalPublishPackage.id : "not generated"}
+              </span>
+              {outcome.revisionInstruction ? <span>Revision: {outcome.revisionInstruction}</span> : null}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }

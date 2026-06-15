@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { StatusBadge } from "@/components/StatusBadge";
+import { mockApprovalSimulation } from "@/lib/approvals/approvalAuditLog";
 import { agents } from "@/lib/mockData/agents";
 import { approvals } from "@/lib/mockData/approvals";
 import { evaluations } from "@/lib/mockData/evaluations";
 import { prompts } from "@/lib/mockData/prompts";
 import { workflowRuns } from "@/lib/mockData/workflowRuns";
-import { runCampaignPublishPackageWorkflow } from "@/lib/workflows/workflowRunner";
+import {
+  runCampaignPublishPackageWorkflow,
+  runCampaignWorkflowWithApprovalDecision,
+} from "@/lib/workflows/workflowRunner";
 import {
   formatTokenCount,
   formatUsdEstimate,
@@ -29,6 +33,18 @@ const summary = summariseWorkflowRuns(workflowRuns);
 const pendingApprovals = approvals.filter((approval) => approval.status === "pending");
 const sampleRuntimeResult = runCampaignPublishPackageWorkflow({
   campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
+});
+const approvedContinuation = runCampaignWorkflowWithApprovalDecision({
+  approvalDecision: "approved",
+  campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
+  decidedBy: "mock_reviewer@example.test",
+  reviewerComment: "Approved for mock preview after public-safe labels were checked.",
+});
+const needsChangesContinuation = runCampaignWorkflowWithApprovalDecision({
+  approvalDecision: "needs_changes",
+  campaignGoal: "Launch a public-safe AI workflow showcase for CV reviewers",
+  decidedBy: "mock_reviewer@example.test",
+  reviewerComment: "Needs clearer public-safe labels before mock approval.",
 });
 const recentRuns = [...workflowRuns]
   .sort((left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt))
@@ -88,16 +104,22 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">
-                Stage 3 runtime engine
+                Stage 4 governance layer
               </p>
               <h2 className="mt-3 text-2xl font-semibold tracking-tight">
-                Deterministic agent workflow execution is now available as a mock API.
+                Human approval decisions now control deterministic workflow continuation.
               </h2>
               <p className="mt-3 max-w-3xl leading-7 text-amber-100">
                 The sample runtime executes planner, drafting, QA, approval gate, and preview publish
                 package steps with {sampleRuntimeResult.traceEvents.length} trace events and{" "}
                 {formatTokenCount(sampleRuntimeResult.evaluationSummary.cost.totalTokens)} mock tokens.
+                Approval examples show continue, stop, and return-to-drafting outcomes.
               </p>
+              <div className="mt-4 grid gap-3 text-sm text-amber-100 sm:grid-cols-3">
+                <span>Approved: {approvedContinuation.workflowAction}</span>
+                <span>Needs changes: {needsChangesContinuation.workflowAction}</span>
+                <span>Gate: {mockApprovalSimulation.status}</span>
+              </div>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
@@ -107,10 +129,10 @@ export default function DashboardPage() {
                 View sample result
               </Link>
               <Link
-                href="/workflows"
+                href={`/approvals/${mockApprovalSimulation.approvalId}`}
                 className="rounded-full border border-amber-200/30 px-5 py-3 text-center text-sm font-semibold text-amber-50 transition hover:bg-amber-200/10"
               >
-                Start from mock input
+                Review approval simulation
               </Link>
             </div>
           </div>

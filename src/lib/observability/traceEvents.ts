@@ -5,8 +5,13 @@ export type TraceEventType =
   | "agent_started"
   | "agent_completed"
   | "approval_required"
+  | "approval_approved"
+  | "approval_rejected"
+  | "approval_needs_changes"
   | "evaluation_completed"
-  | "workflow_completed";
+  | "workflow_completed"
+  | "workflow_stopped"
+  | "workflow_returned_to_drafting";
 
 export type RuntimeTraceEvent = {
   id: string;

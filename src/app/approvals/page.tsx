@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { StatusBadge } from "@/components/StatusBadge";
+import { mockApprovalSimulation } from "@/lib/approvals/approvalAuditLog";
+import { explainApprovalRequirement, getActionRiskLevel } from "@/lib/approvals/approvalPolicy";
 import { agents } from "@/lib/mockData/agents";
 import { approvals } from "@/lib/mockData/approvals";
 import { workflowRuns } from "@/lib/mockData/workflowRuns";
@@ -43,6 +45,38 @@ export default function ApprovalsPage() {
           Approval states are fixture data. They show how a platform can pause, approve,
           reject, or request changes before higher-risk tool usage.
         </p>
+
+        <section className="mt-10 rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">
+                Mock public-safe approval simulation
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+                {mockApprovalSimulation.actionName}
+              </h2>
+              <p className="mt-3 max-w-4xl leading-7 text-amber-100">
+                {explainApprovalRequirement(mockApprovalSimulation.actionName)}
+              </p>
+            </div>
+            <StatusBadge
+              label={`${getActionRiskLevel(mockApprovalSimulation.actionName)} risk`}
+              tone="danger"
+            />
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-4">
+            <ApprovalField label="Status" value={mockApprovalSimulation.status} />
+            <ApprovalField label="Reviewer role" value={mockApprovalSimulation.reviewerRole} />
+            <ApprovalField label="Run" value={mockApprovalSimulation.runId} />
+            <ApprovalField label="Reviewer comment" value={mockApprovalSimulation.reviewerComment} />
+          </div>
+          <Link
+            href={`/approvals/${mockApprovalSimulation.approvalId}`}
+            className="mt-6 inline-flex rounded-full bg-amber-300 px-5 py-3 text-sm font-semibold text-black transition hover:bg-amber-200"
+          >
+            View decision examples
+          </Link>
+        </section>
 
         <section className="mt-10 grid gap-6">
           {approvals.map((approval) => {

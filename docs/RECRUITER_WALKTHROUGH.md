@@ -27,7 +27,9 @@ The repo is deliberately safe for public viewing. It does not expose production 
    - This is the strongest technical demo path. It shows a step-by-step trace from intake through prompt compilation, evaluation, and a blocked approval gate.
 4. Open `/approvals`.
    - Confirm the system models pending, approved, rejected, and needs-changes states.
-5. Open `/prompts`, `/evaluations`, and `/tools`.
+5. Open `/approvals/gate_launch-a-public-safe-ai-workflow-showcase-for-cv_publish`.
+   - Review the mock approval decisions, audit trail examples, and workflow action outcomes.
+6. Open `/prompts`, `/evaluations`, and `/tools`.
    - These pages show registry thinking and platform governance.
 
 ## What To Look For In The Code
@@ -46,6 +48,8 @@ The repo is deliberately safe for public viewing. It does not expose production 
 
 - Why public-safe boundaries matter when showcasing work from a private product.
 - How approval gates reduce risk in agentic workflows.
+- How approval decisions continue, stop, or return a workflow to drafting.
+- Why audit trails matter for public-facing or high-risk agentic actions.
 - Why prompt and tool registries matter for governance.
 - How evaluation feedback can block or route workflow runs.
 - How TypeScript models can make platform behaviour clearer before a real backend exists.

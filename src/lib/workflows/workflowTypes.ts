@@ -1,4 +1,10 @@
 import type {
+  ApprovalDecision,
+  ApprovalDecisionPayload,
+  ApprovalDecisionResult,
+  ApprovalWorkflowAction,
+} from "@/lib/approvals/approvalTypes";
+import type {
   ApprovalAgentOutput,
   DraftingAgentOutput,
   PlannerAgentOutput,
@@ -18,6 +24,11 @@ export type CampaignWorkflowStepId =
   | "publish_package";
 
 export type CampaignWorkflowRunStatus = "completed";
+
+export type CampaignWorkflowContinuationStatus =
+  | "completed"
+  | "stopped"
+  | "returned_to_drafting";
 
 export type CampaignWorkflowStepStatus = "completed" | "approval_required";
 
@@ -97,4 +108,24 @@ export type CampaignWorkflowRunResult = {
   traceEvents: RuntimeTraceEvent[];
   evaluationSummary: CampaignEvaluationSummary;
   publicSafetyNote: string;
+};
+
+export type CampaignWorkflowApprovalDecisionInput = CampaignWorkflowInput & {
+  approvalDecision: ApprovalDecision;
+  reviewerComment: string;
+  decidedBy: string;
+  decidedAt?: string;
+  runStartedAt?: string;
+};
+
+export type CampaignWorkflowContinuationResult = Omit<
+  CampaignWorkflowRunResult,
+  "finalPublishPackage" | "status"
+> & {
+  status: CampaignWorkflowContinuationStatus;
+  approvalDecisionPayload: ApprovalDecisionPayload;
+  approvalDecisionResult: ApprovalDecisionResult;
+  workflowAction: ApprovalWorkflowAction;
+  finalPublishPackage: CampaignPublishPackage | null;
+  revisionInstruction?: string;
 };

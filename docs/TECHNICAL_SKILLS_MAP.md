@@ -21,6 +21,7 @@ This document maps the showcase to the engineering skills it is intended to evid
 | Workflow orchestration | `src/types/workflow.ts`, `src/lib/workflowState.ts`, `src/lib/mockData/workflowRuns.ts` |
 | Workflow execution engine | `src/lib/workflows` |
 | Human-in-the-loop gates | `src/types/approval.ts`, `src/lib/mockData/approvals.ts`, `/approvals` |
+| Approval governance | `src/lib/approvals`, `/api/approvals/[approvalId]/decide`, `/approvals/[approvalId]` |
 | Prompt registry | `src/types/prompt.ts`, `src/lib/mockData/prompts.ts`, `/prompts` |
 | Tool governance | `src/types/tool.ts`, `src/lib/mockData/tools.ts`, `/tools` |
 | Evaluation engine shape | `src/types/evaluation.ts`, `src/lib/mockData/evaluations.ts`, `/evaluations` |
@@ -35,6 +36,7 @@ This document maps the showcase to the engineering skills it is intended to evid
 | Runtime state-machine testing | `tests/workflowStateMachine.test.ts` |
 | Input validation testing | `tests/validation.test.ts` |
 | API contract testing | `tests/api.workflowStart.test.ts` |
+| Approval decision testing | `tests/api.approvalDecision.test.ts`, `tests/workflowApprovalContinuation.test.ts` |
 | Fixture integrity testing | `tests/mockData.test.ts` |
 | Display helper testing | `tests/workflowDisplay.test.ts` |
 | CI quality gate | `.github/workflows/ci.yml` |

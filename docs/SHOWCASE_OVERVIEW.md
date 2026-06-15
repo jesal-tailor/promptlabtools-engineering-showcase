@@ -14,6 +14,7 @@ The app models a workflow operations surface:
 - Tools declare allowed agents, risk levels, and approval requirements.
 - Evaluations record rubric scores and feedback.
 - Human approval gates pause or fail-close higher-risk actions.
+- Approval decisions produce mock audit events and deterministic workflow continuation outcomes.
 
 All data is static fixture data under `src/lib/mockData`.
 
@@ -29,6 +30,7 @@ All data is static fixture data under `src/lib/mockData`.
 | `/evaluations` | Evaluation results with scores, dimensions, and feedback |
 | `/tools` | Tool registry with allowed agents, risk levels, and approval requirements |
 | `/api/workflows/start` | Deterministic mock workflow start route |
+| `/api/approvals/[approvalId]/decide` | Deterministic mock approval decision route |
 | `/api/showcase-lead` | Mock lead-capture route with validation and typed events |
 
 ## Public-Safe Design
