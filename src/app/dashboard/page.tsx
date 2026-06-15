@@ -91,14 +91,14 @@ export default function DashboardPage() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
-              AI workflow control plane
+              Public-safe mock showcase
             </p>
             <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl">
-              Mock runtime overview for agentic workflow operations.
+              AI workflow control plane for agentic operations.
             </h1>
             <p className="mt-5 max-w-3xl leading-8 text-zinc-400">
-              This dashboard uses local fixtures only. It shows how workflow state, prompt versions,
-              evaluations, approvals, and trace activity can be exposed without touching production systems.
+              This is the 60-second demo view: workflow state, prompt versions, evaluations,
+              approvals, repository writes, mock spend, and trace activity using local fixtures only.
             </p>
           </div>
           <Link
@@ -110,9 +110,9 @@ export default function DashboardPage() {
         </div>
 
         <section className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-          <MetricCard label="Workflow runs" value={summary.totalRuns.toString()} detail={`${summary.completedRuns} completed`} />
-          <MetricCard label="Pending approvals" value={pendingApprovals.length.toString()} detail="Human gates waiting" />
-          <MetricCard label="Prompt versions" value={promptRegistry.length.toString()} detail={`${promptStatusCounts.active} active`} />
+          <MetricCard label="Mock workflow runs" value={summary.totalRuns.toString()} detail={`${summary.completedRuns} completed`} />
+          <MetricCard label="Human gates" value={pendingApprovals.length.toString()} detail="Pending approval" />
+          <MetricCard label="Prompt registry" value={promptRegistry.length.toString()} detail={`${promptStatusCounts.active} active`} />
           <MetricCard label="Average eval score" value={`${averageEvaluationScore}%`} detail={`${evaluationHistory.length} v2 runs`} />
           <MetricCard
             label="Mock spend"

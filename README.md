@@ -5,73 +5,77 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-d4af37.svg)](./LICENSE)
 
-PromptLabTools Engineering Showcase is a public-safe AI Platform Engineering portfolio project that demonstrates the shape of an agentic workflow control plane: typed workflow runs, deterministic mock agent runtimes, workflow execution, prompt and tool registries, human approval gates, evaluation scores, observability-style traces, repository boundaries, API contracts, documentation, tests, and CI quality gates.
+Public-safe AI Platform Engineering showcase for an agentic workflow control plane.
 
-This is a curated proof-of-work repository. It is not a copy of the private PromptLabTools production codebase.
+This repo demonstrates how I model and build the platform layer around AI workflows: deterministic mock agents, orchestration, human approval gates, prompt and tool governance, evaluation checks, trace-style observability, repository boundaries, API contracts, tests, docs, and CI. It is a curated proof-of-work project, not a copy of the private PromptLabTools production codebase.
 
-## What This Repo Proves
+![Dashboard screenshot](./docs/assets/dashboard.png)
 
-- Ability to model AI workflow orchestration with typed state, events, run traces, and approval gates.
-- Product engineering judgement across Next.js App Router, React, TypeScript, Tailwind CSS, API routes, and tests.
-- Public-safe platform thinking: mock integrations, no real secrets, no production webhooks, no customer data, and no private business logic.
-- Documentation discipline for recruiters, engineering reviewers, security boundaries, architecture, and productionisation planning.
-- Quality baseline with ESLint, TypeScript strict checks, Vitest, production build, and GitHub Actions CI.
+## What This Demonstrates
 
-## Five-Minute Demo Path
+- AI workflow orchestration with typed state, runtime traces, approval gates, and continuation paths.
+- Agent runtime patterns using deterministic planner, drafting, QA, and approval agents.
+- Governance layers for prompts, tools, human approvals, audit events, evaluations, and quality regression checks.
+- Repository-pattern persistence boundaries using public-safe in-memory adapters only.
+- Product engineering across Next.js App Router, React, TypeScript, API routes, Tailwind CSS, Vitest, and CI.
+- Public-safe architecture: no secrets, no customer data, no real AI provider calls, no webhooks, and no production automation scripts.
 
-1. Open `/dashboard` to see the mock AI workflow control plane.
-2. Open `/workflows` and select `run_101` to inspect a step-by-step run trace.
-3. Open `/workflows/runtime_sample` to inspect the deterministic Stage 3 runtime result.
-4. Use the mock start form on `/workflows` or POST JSON to `/api/workflows/start`.
-5. Open `/approvals`, `/prompts`, `/evaluations`, and `/tools` to review the registries behind the workflow.
-6. Open `/prompts/prompt_campaign_planner_v2` and `/evaluations/eval_hist_planner_v2` to inspect Stage 5 prompt lifecycle, version comparison, deterministic scoring, and feedback loops.
-7. Open `/tools` and `/tools/audit` to inspect the Stage 6 mock tool execution sandbox, blocked high-risk execution, and audit trail.
-8. Look for the Stage 7 labels on `/dashboard`, `/workflows/runtime_sample`, `/approvals/gate_launch-a-public-safe-ai-workflow-showcase-for-cv_publish`, `/tools/audit`, and `/evaluations/eval_hist_planner_v2` to see the public-safe in-memory repository boundary.
+## CV / Recruiter Summary
+
+**Role signal:** AI Platform Engineer, Agentic Workflow Engineer, Full-Stack Platform Engineer.
+
+**60-second read:** This is a working mock control plane for safe AI automation. It proves I can design the runtime, governance, evaluation, observability, and persistence boundaries around agent workflows without exposing private production systems.
+
+**Best demo path:** `/dashboard` -> `/workflows/runtime_sample` -> `/approvals/gate_launch-a-public-safe-ai-workflow-showcase-for-cv_publish` -> `/prompts` -> `/evaluations/eval_hist_planner_v2` -> `/tools` -> `/tools/audit`.
+
+## Screenshots
+
+| Area | Screenshot |
+| --- | --- |
+| Dashboard overview | [dashboard.png](./docs/assets/dashboard.png) |
+| Runtime workflow | [workflow-runtime.png](./docs/assets/workflow-runtime.png) |
+| Approval governance | [approval-governance.png](./docs/assets/approval-governance.png) |
+| Prompt registry | [prompt-registry.png](./docs/assets/prompt-registry.png) |
+| Evaluation quality layer | [evaluation-dashboard.png](./docs/assets/evaluation-dashboard.png) |
+| Tool sandbox | [tool-sandbox.png](./docs/assets/tool-sandbox.png) |
+| Repository boundary | [repository-boundary.png](./docs/assets/repository-boundary.png) |
+
+See [docs/SCREENSHOTS.md](./docs/SCREENSHOTS.md) for the capture checklist.
+
+## 5-Minute Demo Path
+
+1. Open `/dashboard` for the control-plane overview, metrics, recent runs, and Stage 7 repository boundary label.
+2. Open `/workflows/runtime_sample` to show the deterministic campaign workflow with agents, tools, approval gate, final package, traces, and memory repository metadata.
+3. Open `/approvals/gate_launch-a-public-safe-ai-workflow-showcase-for-cv_publish` to show approved, rejected, and needs-changes outcomes.
+4. Open `/prompts` and `/prompts/prompt_campaign_planner_v2` to show prompt ownership, versions, lifecycle state, criteria, and feedback.
+5. Open `/evaluations/eval_hist_planner_v2` to show deterministic quality scoring, human feedback, and regression context.
+6. Open `/tools` and `/tools/audit` to show permissioned tool execution, blocked high-risk actions, adapter boundaries, and audit records.
+7. Explain that every integration is mock-only and public-safe by design.
 
 ## Architecture Summary
 
 ```text
-User
+Next.js App Router UI
   |
   v
-Next.js App Router pages
+Mock workflow control-plane pages
   |
   v
-Mock workflow control-plane UI
+Typed runtime: agents, workflows, approvals, prompts, evaluations, tools
   |
   v
-Typed local fixtures and helper functions
+Workflow runner, state machines, evaluation engine, tool sandbox
   |
   v
-Public-safe repository interfaces and memory adapters
+Repository interfaces
   |
   v
-Mock API route with validation and typed workflow events
-  |
-  v
-Human approval gates, evaluation records, and trace views
+Public-safe in-memory adapters
 ```
 
-There are no real external API calls. Webhook-like destinations use `mock://` identifiers only.
+For a diagram, see [docs/ARCHITECTURE_DIAGRAM.md](./docs/ARCHITECTURE_DIAGRAM.md).
 
-## Skills Demonstrated
-
-| Area | Evidence |
-| --- | --- |
-| AI platform engineering | Workflow runs, agents, prompts, tools, evaluations, approvals, and traces |
-| Agentic workflow design | Human gates, fail-closed mock publish step, registry-driven runtime metadata |
-| Mock runtime engineering | Deterministic planner, drafting, QA, and approval agents under `src/lib/agents` |
-| Prompt governance | Versioned prompt registry, lifecycle simulation, rendering, comparison, and feedback loops under `src/lib/prompts` |
-| Evaluation governance | Deterministic mock judge, score history, human feedback, and regression checks under `src/lib/evaluations` |
-| Tool execution governance | Permissioned mock tool executor, adapters, typed errors, audit log, and trace events under `src/lib/tools` |
-| Persistence boundary | Repository interfaces, memory adapters, and factory under `src/lib/repositories` |
-| TypeScript modelling | Shared types under `src/types` and typed fixtures under `src/lib/mockData` |
-| API contract design | Mock lead and workflow-start API routes with validation and safe JSON responses |
-| Frontend engineering | App Router pages for dashboard, workflow detail, registries, and documentation links |
-| Quality engineering | Vitest tests for validation, workflow transitions, fixtures, and display helpers |
-| Security awareness | Explicit public-safe boundaries, no secrets, no customer data, no production scripts |
-
-## Public-Safe Boundaries
+## Public-Safe Boundary
 
 This repository intentionally excludes:
 
@@ -79,26 +83,15 @@ This repository intentionally excludes:
 - Real webhook URLs, credentials, API keys, or deployment configuration.
 - Customer data, private analytics, real lead data, or user exports.
 - Proprietary PromptLabTools prompts, scoring rules, funnel logic, or automation scripts.
-- Real model-provider calls or external service calls.
+- Real model-provider calls, publishing actions, GitHub writes, social API calls, or external service calls.
+- Durable database connections.
 
-All workflow runs, agents, prompts, tools, approvals, evaluations, costs, tokens, and trace entries are mock data.
+All workflow runs, agents, prompts, tools, approvals, evaluations, costs, tokens, trace entries, and repository records are mock data.
 
-## How To Run Locally
-
-Prerequisites:
-
-- Node.js 20.18 or newer
-- npm 10 or newer
-
-Install dependencies:
+## Quickstart
 
 ```bash
 npm install
-```
-
-Run the app:
-
-```bash
 npm run dev
 ```
 
@@ -110,29 +103,49 @@ Optional local env file:
 cp .env.example .env.local
 ```
 
-The app does not require real environment variables for the showcase flow.
+The showcase flow does not require real environment variables.
 
 ## Quality Checks
-
-Run individual checks:
 
 ```bash
 npm run lint
 npm run typecheck
 npm run test
 npm run build
-```
-
-Run the full local quality gate:
-
-```bash
 npm run check
 ```
 
 GitHub Actions runs lint, typecheck, tests, and build on push and pull request.
 
+## What Is Real vs Mock
+
+Real engineering work in this repo:
+
+- Next.js and TypeScript implementation.
+- Typed domain models and API contracts.
+- Workflow modelling and state transitions.
+- Approval governance and audit flow.
+- Prompt registry, evaluation, tool sandbox, and repository boundary patterns.
+- Vitest coverage and CI checks.
+- Public-safe documentation.
+
+Mock/public-safe simulation:
+
+- Deterministic agent outputs.
+- Fake external tools and adapter responses.
+- Fake costs, tokens, metrics, and trace data.
+- In-memory repositories only.
+- No real AI provider, publishing, GitHub, webhook, social API, database, or production PromptLabTools call.
+
+See [docs/WHAT_IS_REAL_VS_MOCK.md](./docs/WHAT_IS_REAL_VS_MOCK.md) for the full breakdown.
+
 ## Documentation
 
+- [Hiring manager summary](./docs/HIRING_MANAGER_SUMMARY.md)
+- [Demo script](./docs/DEMO_SCRIPT.md)
+- [Interview talk track](./docs/INTERVIEW_TALK_TRACK.md)
+- [What is real vs mock](./docs/WHAT_IS_REAL_VS_MOCK.md)
+- [Architecture diagram](./docs/ARCHITECTURE_DIAGRAM.md)
 - [Showcase overview](./docs/SHOWCASE_OVERVIEW.md)
 - [Recruiter walkthrough](./docs/RECRUITER_WALKTHROUGH.md)
 - [Technical skills map](./docs/TECHNICAL_SKILLS_MAP.md)
@@ -162,19 +175,20 @@ GitHub Actions runs lint, typecheck, tests, and build on push and pull request.
 
 ## Roadmap
 
-Stage 1 and Stage 2 are implemented first:
+Implemented public-safe stages:
 
 - Stage 1: README positioning and reviewer documentation.
 - Stage 2: Dashboard prototype, workflow trace views, registries, mock data, and tests.
 - Stage 3: Deterministic mock agent runtime, workflow execution engine, trace events, cost estimates, workflow-start API, docs, and tests.
-- Stage 4: Human approval governance, audit events, approval decision API, and continuation paths for approved, rejected, and needs-changes decisions.
+- Stage 4: Human approval governance, audit events, approval decision API, and continuation paths.
 - Stage 5: Prompt registry v2, deterministic evaluation engine, human feedback loop, quality regression checks, API routes, UI pages, docs, and tests.
 - Stage 6: Tool execution sandbox, mock adapters, permission checks, typed tool errors, audit events, API routes, UI pages, workflow integration, docs, and tests.
 - Stage 7: Persistence boundary, repository interfaces, public-safe in-memory adapters, runtime/API integration, docs, and tests.
+- Stage 8: Recruiter-ready README, demo docs, screenshot assets, architecture diagram, and UI copy polish.
 
-Future public-safe stages:
+Future public-safe improvements:
 
-- Add screenshots and a short demo video.
+- Add a short demo video.
 - Add accessibility checks and visual regression coverage.
 - Add OpenAPI-style schema documentation for the mock routes.
 - Add example observability dashboards using fixture logs only.

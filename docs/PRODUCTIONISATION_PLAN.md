@@ -2,6 +2,16 @@
 
 This repository is intentionally a public-safe mock showcase. This plan explains what would need to change before a similar architecture could become a production AI workflow platform.
 
+## Intentional Mock Design
+
+The deterministic mock design is intentional:
+
+- It lets recruiters and interviewers run the repo without secrets.
+- It keeps CI stable.
+- It protects private PromptLabTools production logic.
+- It shows where production services would attach without actually connecting them.
+- It makes the architecture reviewable in public.
+
 ## Current Showcase Boundary
 
 The current app has:
@@ -17,6 +27,20 @@ The current app has:
 - No external API calls.
 - No production webhook dispatch.
 - No real prompt bodies or customer records.
+
+## What Would Change In Production
+
+A production version would replace deterministic mocks with authenticated, durable, observable services:
+
+- Model-backed or service-backed agent execution.
+- Durable Supabase/Postgres repositories or equivalent storage.
+- Real queueing and retry infrastructure.
+- Real tool adapters behind the same sandbox boundary.
+- Environment-specific secrets and configuration.
+- RBAC and reviewer identity.
+- Production audit, retention, and incident controls.
+
+Those changes belong outside this public repository unless they remain mock-only and secret-free.
 
 ## Phase 1: Secure Foundations
 

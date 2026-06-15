@@ -50,7 +50,7 @@ export default function ToolsPage() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
-              Mock public-safe tool execution sandbox
+              Public-safe mock tool execution sandbox
             </p>
             <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl">
               Agent tool access with permissions, adapter boundaries, and audit events.

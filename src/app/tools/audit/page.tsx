@@ -23,14 +23,14 @@ export default function ToolAuditPage() {
           Back to tool registry
         </Link>
         <p className="mt-8 text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
-          Mock public-safe tool audit trail
+          Public-safe mock tool audit trail
         </p>
         <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl">
           Tool calls are recorded as deterministic audit events.
         </h1>
         <p className="mt-5 max-w-3xl leading-8 text-zinc-400">
           This audit trail demonstrates the shape of governance logging for agent tool calls.
-          Events are in-memory mock records, not production audit logs.
+          Events are in-memory mock records, not production audit logs or external integration records.
         </p>
 
         <section className="mt-10 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6">

@@ -11,6 +11,7 @@ This document maps the showcase to the engineering skills it is intended to evid
 | TypeScript strict modelling | Domain types in `src/types` and typed fixture arrays in `src/lib/mockData` |
 | API contract design | `src/app/api/showcase-lead/route.ts` accepts form or JSON, validates input, and returns typed mock events |
 | UI information architecture | Dashboard, run list, run trace, approval queue, prompt registry, evaluation page, and tool registry |
+| Recruiter-ready presentation | README top section, demo script, hiring-manager summary, screenshots, and interview talk track |
 
 ## AI Platform Engineering
 
@@ -30,6 +31,18 @@ This document maps the showcase to the engineering skills it is intended to evid
 | Evaluation engine shape | `src/types/evaluation.ts`, `src/lib/mockData/evaluations.ts`, `/evaluations` |
 | Evaluation engine v2 | `src/lib/evaluations`, `/evaluations/[evaluationId]`, and regression API routes |
 | Observability traces | Workflow detail pages and `getRecentTraceActivity` in `src/lib/workflowDisplay.ts` |
+
+## AI Platform Engineer Role Mapping
+
+| Role expectation | Evidence in this repo |
+| --- | --- |
+| Build reliable agent workflows | Deterministic runtime, workflow templates, state machines, and trace events |
+| Govern high-risk actions | Approval policy, decision API, workflow continuation paths, and audit events |
+| Manage prompts as assets | Prompt registry, lifecycle states, version comparison, criteria, and feedback |
+| Evaluate output quality | Deterministic evaluation engine, regression checks, and human feedback summaries |
+| Control tool use | Permissioned executor, risk levels, mock adapters, disabled tool handling, and audit trail |
+| Design persistence boundaries | Repository interfaces, factory, memory adapters, and integration tests |
+| Keep public work safe | Explicit real-vs-mock docs, no secrets, no external calls, and synthetic data only |
 
 ## Quality Engineering
 
@@ -73,3 +86,7 @@ This document maps the showcase to the engineering skills it is intended to evid
 | Quality regression awareness | Deterministic regression checks before prompt or output promotion |
 | Tool execution readiness | Permissioned tool calls, audit events, typed errors, and adapter isolation |
 | Persistence readiness | Repository contracts and factory-based adapter replacement path |
+
+## PromptLabTools Inspiration Boundary
+
+PromptLabTools inspired the workflow-control-plane patterns: safe automation, prompt governance, approval gates, evaluation visibility, and operational dashboards. This repository does not claim to reproduce PromptLabTools production code, prompts, data, infrastructure, or proprietary business logic.

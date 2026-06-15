@@ -36,14 +36,14 @@ export default function ApprovalsPage() {
     <main className="bg-black px-6 py-16 text-white">
       <div className="mx-auto max-w-6xl">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
-          Human-in-the-loop gates
+          Public-safe mock human-in-the-loop gates
         </p>
         <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl">
           Mock approval queue for agentic workflow control.
         </h1>
         <p className="mt-5 max-w-3xl leading-8 text-zinc-400">
           Approval states are fixture data. They show how a platform can pause, approve,
-          reject, or request changes before higher-risk tool usage.
+          reject, or request changes before higher-risk tool usage, with audit-ready decision metadata.
         </p>
 
         <section className="mt-10 rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6">

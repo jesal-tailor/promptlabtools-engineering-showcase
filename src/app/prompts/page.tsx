@@ -41,7 +41,7 @@ export default function PromptsPage() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
-              Prompt registry v2
+              Public-safe mock prompt registry
             </p>
             <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl">
               Versioned prompt metadata with lifecycle, evaluation, and feedback loops.

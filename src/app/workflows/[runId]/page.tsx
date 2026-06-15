@@ -315,12 +315,15 @@ function RuntimeSampleResultPage({ result }: { result: CampaignWorkflowRunResult
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">
-                {result.runId} / {result.templateId}
+                Public-safe mock runtime / {result.templateId}
               </p>
               <h1 className="mt-3 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl">
-                Deterministic mock runtime result
+                Demo runtime: campaign publish package
               </h1>
-              <p className="mt-5 max-w-4xl leading-8 text-amber-100">{result.publicSafetyNote}</p>
+              <p className="mt-5 max-w-4xl leading-8 text-amber-100">
+                A recruiter-ready walkthrough of planner, drafting, QA, approval, tool sandbox,
+                repository boundary, and trace events. {result.publicSafetyNote}
+              </p>
             </div>
             <StatusBadge label="Runtime completed" tone="success" />
           </div>

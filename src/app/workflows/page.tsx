@@ -35,15 +35,15 @@ export default function WorkflowsPage() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
-              Workflow orchestration
+              Public-safe mock workflow orchestration
             </p>
             <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl">
               Mock workflow runs with traceable agents, prompts, tools, and gates.
             </h1>
             <p className="mt-5 max-w-3xl leading-8 text-zinc-400">
-              These runs are intentionally synthetic. They demonstrate orchestration patterns,
-              state transitions, evaluation checkpoints, and human approval gates without exposing
-              PromptLabTools production automations.
+              These runs are intentionally synthetic. Use this page to show orchestration patterns,
+              state transitions, evaluation checkpoints, repository metadata, and human approval gates
+              without exposing PromptLabTools production automations.
             </p>
           </div>
           <Link
@@ -57,7 +57,7 @@ export default function WorkflowsPage() {
         <section className="mt-10 grid gap-6 rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6 lg:grid-cols-[1fr_0.9fr]">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">
-              Stage 3 mock runtime
+              Recruiter demo runtime
             </p>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight">
               Start the deterministic campaign workflow.

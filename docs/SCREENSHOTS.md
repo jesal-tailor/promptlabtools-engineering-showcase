@@ -1,24 +1,23 @@
 # Screenshots
 
-Screenshots are intentionally not committed yet. Add only public-safe captures that do not contain secrets, private data, analytics, or customer information.
+Stage 8 uses public-safe local screenshots stored in `docs/assets`.
 
-## Recommended Captures
+## Screenshot Set
 
-1. Homepage hero and architecture card.
-2. Workflow examples page.
-3. Architecture page.
-4. Mock API JSON response from `/api/showcase-lead`.
-5. GitHub Actions CI passing.
-
-## Suggested Folder
-
-```text
-docs/screenshots/
-```
+| Page | Asset |
+| --- | --- |
+| `/dashboard` | [dashboard.png](./assets/dashboard.png) |
+| `/workflows/runtime_sample` | [workflow-runtime.png](./assets/workflow-runtime.png) |
+| `/approvals/gate_launch-a-public-safe-ai-workflow-showcase-for-cv_publish` | [approval-governance.png](./assets/approval-governance.png) |
+| `/prompts` | [prompt-registry.png](./assets/prompt-registry.png) |
+| `/evaluations` | [evaluation-dashboard.png](./assets/evaluation-dashboard.png) |
+| `/tools` | [tool-sandbox.png](./assets/tool-sandbox.png) |
+| `/workflows/runtime_sample` repository panel | [repository-boundary.png](./assets/repository-boundary.png) |
 
 ## Capture Checklist
 
 - Use local sample data only.
-- Do not show real emails, customers, analytics, or credentials.
-- Prefer clean browser captures at desktop width.
-- Update the README if screenshots are added.
+- Do not show real emails, customers, analytics, credentials, secrets, or private browser state.
+- Prefer clean desktop captures.
+- Keep screenshots focused on public-safe mock pages.
+- Re-capture after major UI changes.

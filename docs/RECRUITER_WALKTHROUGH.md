@@ -1,6 +1,12 @@
 # Recruiter Walkthrough
 
-This guide is for a non-deep-code review. It should take about five minutes.
+This guide is for a non-deep-code review. A hiring manager should understand the project in under 60 seconds, and a deeper walkthrough should take about five minutes.
+
+## 60-Second Summary
+
+This is a public-safe AI Platform Engineering showcase. It demonstrates the platform controls around agentic workflows: runtime orchestration, approvals, prompt governance, evaluation checks, tool permissions, observability, repository boundaries, tests, docs, and CI.
+
+It is inspired by PromptLabTools-style workflow needs, but it is not production PromptLabTools code and does not include private business logic.
 
 ## What This Project Shows
 
@@ -17,6 +23,14 @@ Jesal can design and implement a credible AI workflow platform surface:
 - Automated quality checks.
 
 The repo is deliberately safe for public viewing. It does not expose production PromptLabTools logic or secrets.
+
+## What This Proves For AI Platform Roles
+
+- Jesal can model agent workflows beyond a single prompt or chatbot.
+- Jesal understands human-in-the-loop controls for risky actions.
+- Jesal can create typed platform boundaries for prompts, tools, evaluations, traces, and persistence.
+- Jesal can make public-safe portfolio work that preserves confidentiality.
+- Jesal can back the demo with tests, docs, and CI rather than only UI screenshots.
 
 ## Five-Minute Click Path
 
@@ -59,6 +73,7 @@ The repo is deliberately safe for public viewing. It does not expose production 
 
 ## Interview Talking Points
 
+- Why deterministic mocks are intentional for public-safe CI and recruiter review.
 - Why public-safe boundaries matter when showcasing work from a private product.
 - How approval gates reduce risk in agentic workflows.
 - How approval decisions continue, stop, or return a workflow to drafting.
@@ -72,6 +87,13 @@ The repo is deliberately safe for public viewing. It does not expose production 
 - How evaluation feedback can block or route workflow runs.
 - How TypeScript models can make platform behaviour clearer before a real backend exists.
 - How CI and tests protect a portfolio project from becoming only a visual demo.
+
+## What Is Not Being Claimed
+
+- This is not the private PromptLabTools production repository.
+- It does not connect to real PromptLabTools infrastructure.
+- It does not call live AI providers, webhooks, GitHub APIs, publishing APIs, social APIs, or databases.
+- It does not contain customer data, production prompts, production scoring logic, credentials, or private automation scripts.
 
 ## Public-Safe Statement
 
