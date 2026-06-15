@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-white/10 bg-black">
@@ -9,12 +11,12 @@ export function SiteFooter() {
           </p>
         </div>
         <div className="flex flex-wrap gap-4">
-          <a href="/dashboard" className="hover:text-white">
+          <Link href="/dashboard" className="hover:text-white">
             Dashboard
-          </a>
-          <a href="/tools" className="hover:text-white">
+          </Link>
+          <Link href="/tools" className="hover:text-white">
             Tools
-          </a>
+          </Link>
           <a href="https://www.promptlabtools.com" className="hover:text-white">
             Website
           </a>

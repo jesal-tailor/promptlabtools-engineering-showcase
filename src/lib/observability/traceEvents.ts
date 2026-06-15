@@ -9,6 +9,9 @@ export type TraceEventType =
   | "approval_rejected"
   | "approval_needs_changes"
   | "evaluation_completed"
+  | "tool_blocked"
+  | "tool_executed"
+  | "tool_failed"
   | "workflow_completed"
   | "workflow_stopped"
   | "workflow_returned_to_drafting";

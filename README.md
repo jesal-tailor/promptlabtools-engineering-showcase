@@ -25,6 +25,7 @@ This is a curated proof-of-work repository. It is not a copy of the private Prom
 4. Use the mock start form on `/workflows` or POST JSON to `/api/workflows/start`.
 5. Open `/approvals`, `/prompts`, `/evaluations`, and `/tools` to review the registries behind the workflow.
 6. Open `/prompts/prompt_campaign_planner_v2` and `/evaluations/eval_hist_planner_v2` to inspect Stage 5 prompt lifecycle, version comparison, deterministic scoring, and feedback loops.
+7. Open `/tools` and `/tools/audit` to inspect the Stage 6 mock tool execution sandbox, blocked high-risk execution, and audit trail.
 
 ## Architecture Summary
 
@@ -58,6 +59,7 @@ There are no real external API calls. Webhook-like destinations use `mock://` id
 | Mock runtime engineering | Deterministic planner, drafting, QA, and approval agents under `src/lib/agents` |
 | Prompt governance | Versioned prompt registry, lifecycle simulation, rendering, comparison, and feedback loops under `src/lib/prompts` |
 | Evaluation governance | Deterministic mock judge, score history, human feedback, and regression checks under `src/lib/evaluations` |
+| Tool execution governance | Permissioned mock tool executor, adapters, typed errors, audit log, and trace events under `src/lib/tools` |
 | TypeScript modelling | Shared types under `src/types` and typed fixtures under `src/lib/mockData` |
 | API contract design | Mock lead and workflow-start API routes with validation and safe JSON responses |
 | Frontend engineering | App Router pages for dashboard, workflow detail, registries, and documentation links |
@@ -142,6 +144,9 @@ GitHub Actions runs lint, typecheck, tests, and build on push and pull request.
 - [Evaluation strategy](./docs/EVALUATION_STRATEGY.md)
 - [Human feedback loop](./docs/HUMAN_FEEDBACK_LOOP.md)
 - [Quality regression checks](./docs/QUALITY_REGRESSION_CHECKS.md)
+- [Tool execution sandbox](./docs/TOOL_EXECUTION_SANDBOX.md)
+- [Tool registry](./docs/TOOL_REGISTRY.md)
+- [Adapter boundary](./docs/ADAPTER_BOUNDARY.md)
 - [Architecture](./docs/ARCHITECTURE.md)
 - [Security and privacy](./docs/SECURITY_AND_PRIVACY.md)
 - [Engineering decisions](./docs/ENGINEERING_DECISIONS.md)
@@ -157,6 +162,7 @@ Stage 1 and Stage 2 are implemented first:
 - Stage 3: Deterministic mock agent runtime, workflow execution engine, trace events, cost estimates, workflow-start API, docs, and tests.
 - Stage 4: Human approval governance, audit events, approval decision API, and continuation paths for approved, rejected, and needs-changes decisions.
 - Stage 5: Prompt registry v2, deterministic evaluation engine, human feedback loop, quality regression checks, API routes, UI pages, docs, and tests.
+- Stage 6: Tool execution sandbox, mock adapters, permission checks, typed tool errors, audit events, API routes, UI pages, workflow integration, docs, and tests.
 
 Future public-safe stages:
 

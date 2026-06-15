@@ -13,6 +13,7 @@ import type {
 } from "@/lib/agents/agentTypes";
 import type { MockCostEstimate } from "@/lib/observability/costEstimator";
 import type { RuntimeTraceEvent } from "@/lib/observability/traceEvents";
+import type { ToolCall } from "@/lib/tools/toolTypes";
 
 export type CampaignWorkflowTemplateId = "campaign_publish_package";
 
@@ -105,6 +106,7 @@ export type CampaignWorkflowRunResult = {
   agentOutputs: CampaignWorkflowAgentOutputs;
   approvalRequirement: CampaignApprovalRequirement;
   finalPublishPackage: CampaignPublishPackage;
+  toolCalls: ToolCall[];
   traceEvents: RuntimeTraceEvent[];
   evaluationSummary: CampaignEvaluationSummary;
   publicSafetyNote: string;

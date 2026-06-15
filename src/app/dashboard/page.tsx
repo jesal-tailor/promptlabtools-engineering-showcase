@@ -10,6 +10,7 @@ import { workflowRuns } from "@/lib/mockData/workflowRuns";
 import { promptRegistry } from "@/lib/prompts/promptRegistry";
 import type { PromptLifecycleStatus } from "@/lib/prompts/promptTypes";
 import { comparePromptVersions } from "@/lib/prompts/promptVersioning";
+import { toolRegistry } from "@/lib/tools/toolRegistry";
 import {
   runCampaignPublishPackageWorkflow,
   runCampaignWorkflowWithApprovalDecision,
@@ -56,6 +57,9 @@ const evaluationComparison = compareEvaluationRuns("eval_hist_planner_v1", "eval
 const regressionCheck = detectQualityRegression(
   evaluationComparison.baselineScore,
   evaluationComparison.candidateScore,
+);
+const blockedRuntimeToolCalls = sampleRuntimeResult.toolCalls.filter(
+  (toolCall) => toolCall.status === "blocked",
 );
 const recentRuns = [...workflowRuns]
   .sort((left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt))
@@ -109,6 +113,43 @@ export default function DashboardPage() {
             value={formatUsdEstimate(summary.estimatedCostUsd)}
             detail={`${formatTokenCount(summary.totalTokens)} tokens`}
           />
+        </section>
+
+        <section className="mt-10 rounded-[2rem] border border-emerald-300/20 bg-emerald-300/10 p-6">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">
+                Stage 6 tool execution sandbox
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+                Agents now request tools through a permissioned mock adapter boundary.
+              </h2>
+              <p className="mt-3 max-w-3xl leading-7 text-emerald-100">
+                The sample workflow records {sampleRuntimeResult.toolCalls.length} tool calls across
+                drafting, QA, and publish preparation. High-risk publish execution is blocked until
+                approval, and all tool events are written as mock audit records.
+              </p>
+              <div className="mt-4 grid gap-3 text-sm text-emerald-100 sm:grid-cols-3">
+                <span>Registered tools: {toolRegistry.length}</span>
+                <span>Blocked runtime calls: {blockedRuntimeToolCalls.length}</span>
+                <span>Disabled tools: {toolRegistry.filter((tool) => !tool.enabled).length}</span>
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/tools"
+                className="rounded-full bg-emerald-200 px-5 py-3 text-center text-sm font-semibold text-black transition hover:bg-emerald-100"
+              >
+                Inspect tool sandbox
+              </Link>
+              <Link
+                href="/tools/audit"
+                className="rounded-full border border-emerald-200/30 px-5 py-3 text-center text-sm font-semibold text-emerald-50 transition hover:bg-emerald-200/10"
+              >
+                View tool audit
+              </Link>
+            </div>
+          </div>
         </section>
 
         <section className="mt-10 rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-6">

@@ -36,15 +36,20 @@ describe("campaign publish package workflow runner", () => {
       "agent_completed",
       "agent_started",
       "agent_completed",
+      "tool_executed",
       "agent_started",
+      "tool_executed",
       "agent_completed",
       "evaluation_completed",
       "agent_started",
       "approval_required",
       "agent_completed",
+      "tool_blocked",
       "workflow_completed",
     ]);
-    expect(result.traceEvents.map((event) => event.sequence)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    expect(result.traceEvents.map((event) => event.sequence)).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+    ]);
   });
 
   it("returns deterministic agent outputs and evaluation summary", () => {

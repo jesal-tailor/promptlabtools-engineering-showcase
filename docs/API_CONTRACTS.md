@@ -208,6 +208,74 @@ Or explicit scores:
 
 The route returns a deterministic regression decision and does not call an external evaluator.
 
+## Get Tool
+
+`GET /api/tools/[toolId]`
+
+Returns a mock tool definition and permission examples for registered runtime agents.
+
+Missing tool IDs return HTTP 400 because unknown tools fail safely.
+
+## Execute Tool
+
+`POST /api/tools/execute`
+
+### JSON Request
+
+```json
+{
+  "runId": "mock_run_api",
+  "stepId": "publish_package",
+  "agentId": "approval_agent",
+  "toolId": "create_mock_publish_package",
+  "approved": false,
+  "inputPayload": {
+    "title": "Mock package",
+    "headline": "Mock headline",
+    "body": "Mock body"
+  }
+}
+```
+
+### Validation
+
+- `runId` is required.
+- `stepId` is required.
+- `agentId` must be a registered runtime agent.
+- `toolId` is required.
+- `inputPayload` must be a JSON object.
+
+### Blocked Response
+
+Approval-required tools return a blocked result unless `approved: true` is supplied.
+
+```json
+{
+  "ok": false,
+  "status": "blocked",
+  "result": {
+    "toolCall": {
+      "status": "blocked"
+    },
+    "error": {
+      "code": "APPROVAL_REQUIRED"
+    }
+  },
+  "note": "Mock public-safe tool execution sandbox only. No real API, webhook, filesystem, GitHub, or publishing action was called."
+}
+```
+
+Invalid input returns HTTP 400.
+
+## Tool Audit
+
+`GET /api/tools/audit`
+
+Returns deterministic in-memory mock tool audit events. Optional query parameters:
+
+- `runId`
+- `toolId`
+
 ## Public-Safe API Boundary
 
 The API routes do not:
@@ -216,6 +284,7 @@ The API routes do not:
 - Send webhooks.
 - Persist data.
 - Use secrets.
+- Execute real tool adapters.
 - Execute production PromptLabTools automations.
 - Process customer records.
 
@@ -229,6 +298,7 @@ Production API contracts would add:
 - Async execution status endpoints.
 - Approval decision endpoints.
 - Prompt lifecycle and evaluation regression endpoints.
+- Tool execution endpoints with idempotency and durable audit records.
 - Audit logs.
 - OpenAPI or JSON Schema definitions.
 - Rate limits and abuse protection.

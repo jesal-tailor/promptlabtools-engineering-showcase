@@ -22,11 +22,22 @@ Real values should live only in local development environments or deployment pla
 
 ## Mock Integrations
 
-All integration examples are mocked. The API route returns JSON and does not call external services.
+All integration examples are mocked. API routes return JSON and do not call external services.
+
+The Stage 6 tool sandbox keeps integration behavior behind `adapterType: "mock"` adapters. Tool execution:
+
+- Checks agent permissions before execution.
+- Blocks disabled tools.
+- Blocks high-risk tools without approval.
+- Returns typed safe errors for unknown tools.
+- Records mock audit events only.
+- Never calls webhooks, GitHub, analytics, publishing systems, storage APIs, or model providers.
 
 ## Data Handling
 
 The mock lead-capture route creates in-memory event payloads for the response only. It does not persist data and does not send data to third parties.
+
+Tool audit events are deterministic in-memory mock records. They are not production audit logs and do not contain customer payloads.
 
 ## Public Safety Principle
 

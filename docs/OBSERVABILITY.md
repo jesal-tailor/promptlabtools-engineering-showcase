@@ -13,6 +13,9 @@ The workflow runner emits:
 - `agent_completed`
 - `approval_required`
 - `evaluation_completed`
+- `tool_executed`
+- `tool_blocked`
+- `tool_failed`
 - `workflow_completed`
 
 Trace events include:
@@ -39,6 +42,24 @@ The estimator is deterministic. It uses:
 
 These estimates are illustrative only. They are not provider billing data.
 
+## Tool Audit Events
+
+Stage 6 adds mock tool audit events in `src/lib/tools/toolAuditLog.ts`.
+
+Tool audit events include:
+
+- Tool call id.
+- Run id.
+- Step id.
+- Agent id.
+- Tool id.
+- Status.
+- Risk level.
+- Approval requirement.
+- Public-safe note.
+
+The workflow runner includes tool trace events for drafting artifacts, QA scoring, and publish-package gating.
+
 ## Why Fixture Observability
 
 The repository is public, so observability data must not contain:
@@ -48,6 +69,7 @@ The repository is public, so observability data must not contain:
 - API keys.
 - Provider traces.
 - Webhook bodies.
+- Tool payloads from real integrations.
 - Production run identifiers.
 
 Fixture traces let reviewers see the platform thinking without exposing private systems.

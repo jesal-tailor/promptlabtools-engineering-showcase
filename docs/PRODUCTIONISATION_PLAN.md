@@ -10,6 +10,7 @@ The current app has:
 - A mock lead-capture API route.
 - Local validation and state-transition helpers.
 - Deterministic prompt registry and evaluation engine fixtures.
+- Deterministic mock tool registry, executor, adapter boundary, and audit events.
 - No database.
 - No authentication.
 - No external API calls.
@@ -24,6 +25,7 @@ The current app has:
 - Add migration tooling and seed data for local development.
 - Add secret management through the deployment platform or a dedicated secret store.
 - Add audit logging for every approval decision and tool execution.
+- Add server-side tool permission enforcement for every adapter call.
 
 ## Phase 2: Workflow Execution Layer
 
@@ -33,6 +35,7 @@ The current app has:
 - Add explicit run states for cancellation, timeout, retry, and manual override.
 - Separate planner, executor, evaluator, and approval coordinator responsibilities.
 - Store trace spans and artifacts with retention policies.
+- Store tool call inputs and outputs with redaction, access control, and retention rules.
 
 ## Phase 3: Prompt And Tool Governance
 
@@ -43,6 +46,7 @@ The current app has:
 - Enforce approval requirements server-side before high-risk tools can execute.
 - Add sandbox and production tool environments.
 - Add redaction and payload-shaping before external calls.
+- Add typed adapter interfaces with idempotency keys, retries, rate limits, and circuit breakers.
 
 ## Phase 4: Evaluation And Observability
 
@@ -58,6 +62,7 @@ The current app has:
 
 - Add provider adapters behind typed interfaces.
 - Add webhook signing and verification.
+- Replace mock adapters with real integration clients only behind the executor boundary.
 - Add per-integration rate limits, circuit breakers, and retry policies.
 - Add integration-level audit logs.
 - Add environment-specific configuration for local, staging, and production.

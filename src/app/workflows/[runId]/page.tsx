@@ -314,14 +314,58 @@ function RuntimeSampleResultPage({ result }: { result: CampaignWorkflowRunResult
             <StatusBadge label="Runtime completed" tone="success" />
           </div>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-4">
+          <div className="mt-8 grid gap-4 md:grid-cols-5">
             <DetailStat label="Steps" value={result.orderedSteps.length.toString()} />
             <DetailStat label="Trace events" value={result.traceEvents.length.toString()} />
+            <DetailStat label="Tool calls" value={result.toolCalls.length.toString()} />
             <DetailStat label="Eval score" value={`${result.evaluationSummary.score}/100`} />
             <DetailStat
               label="Mock cost"
               value={formatUsdEstimate(result.evaluationSummary.cost.estimatedCostUsd)}
             />
+          </div>
+        </section>
+
+        <section className="mt-10 rounded-[2rem] border border-emerald-300/20 bg-emerald-300/10 p-6">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">
+                Mock public-safe tool execution sandbox
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+                Runtime tools are permissioned, audited, and adapter-bound.
+              </h2>
+              <p className="mt-3 max-w-3xl leading-7 text-emerald-100">
+                Drafting writes an in-memory markdown artifact, QA scores content quality, and
+                publish package creation is blocked until approval. These are deterministic mock
+                tool calls only.
+              </p>
+            </div>
+            <Link
+              href="/tools"
+              className="rounded-full border border-emerald-200/30 px-5 py-3 text-center text-sm font-semibold text-emerald-50 transition hover:bg-emerald-200/10"
+            >
+              Open tool registry
+            </Link>
+          </div>
+          <div className="mt-6 grid gap-3 lg:grid-cols-3">
+            {result.toolCalls.map((toolCall) => (
+              <article key={toolCall.toolCallId} className="rounded-2xl border border-emerald-200/20 bg-black/40 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-semibold text-white">{toolCall.toolId}</p>
+                    <p className="mt-1 text-sm text-emerald-100">{toolCall.agentId}</p>
+                  </div>
+                  <StatusBadge
+                    label={toolCall.status}
+                    tone={toolCall.status === "executed" ? "success" : toolCall.status === "failed" ? "danger" : "warning"}
+                  />
+                </div>
+                <p className="mt-3 text-sm leading-6 text-emerald-100">
+                  {toolCall.errorMessage ?? toolCall.outputPayload?.publicSafetyNote?.toString() ?? "Executed through mock adapter."}
+                </p>
+              </article>
+            ))}
           </div>
         </section>
 

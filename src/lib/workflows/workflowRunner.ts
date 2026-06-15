@@ -6,6 +6,8 @@ import { runQaAgent } from "@/lib/agents/qaAgent";
 import { applyApprovalDecision } from "@/lib/approvals/approvalStateMachine";
 import { estimateWorkflowCost } from "@/lib/observability/costEstimator";
 import { createTraceEvent } from "@/lib/observability/traceEvents";
+import { executeToolCall } from "@/lib/tools/toolExecutor";
+import type { ToolCall, ToolExecutionResult } from "@/lib/tools/toolTypes";
 import { campaignPublishPackageTemplate } from "@/lib/workflows/workflowTemplates";
 import {
   transitionCampaignWorkflowState,
@@ -34,6 +36,7 @@ type ApprovalGateRun = {
   campaignGoal: string;
   goalSlug: string;
   traceEvents: CampaignWorkflowRunResult["traceEvents"];
+  toolCalls: ToolCall[];
   nextSequence: number;
   timestampAt: (sequence: number) => string;
   agentOutputs: CampaignWorkflowAgentOutputs;
@@ -109,9 +112,14 @@ function runCampaignWorkflowToApprovalGate({
   let sequence = 1;
   let state: CampaignWorkflowState = "created";
   const traceEvents: CampaignWorkflowRunResult["traceEvents"] = [];
+  const toolCalls: ToolCall[] = [];
 
   const pushTrace = (event: Parameters<typeof createTraceEvent>[0]) => {
     traceEvents.push(createTraceEvent(event));
+  };
+  const recordToolExecution = (result: ToolExecutionResult) => {
+    toolCalls.push(result.toolCall);
+    traceEvents.push(result.traceEvent);
   };
 
   state = transitionCampaignWorkflowState(state, "workflow_started");
@@ -155,7 +163,6 @@ function runCampaignWorkflowToApprovalGate({
     type: "agent_completed",
   });
   sequence += 1;
-
   pushTrace({
     agentId: "drafting_agent",
     createdAt: timestampAt(sequence),
@@ -180,6 +187,21 @@ function runCampaignWorkflowToApprovalGate({
     type: "agent_completed",
   });
   sequence += 1;
+  recordToolExecution(
+    executeToolCall({
+      agentId: "drafting_agent",
+      createdAt: timestampAt(sequence),
+      inputPayload: {
+        body: drafting.body,
+        title: drafting.headline,
+      },
+      runId,
+      sequence,
+      stepId: "drafting_agent",
+      toolId: "write_mock_markdown_artifact",
+    }),
+  );
+  sequence += 1;
 
   pushTrace({
     agentId: "qa_agent",
@@ -193,12 +215,33 @@ function runCampaignWorkflowToApprovalGate({
   });
   sequence += 1;
   const qa = runQaAgent({ context, draft: drafting, plan: planner });
+  const contentScoreTool = executeToolCall({
+    agentId: "qa_agent",
+    createdAt: timestampAt(sequence),
+    inputPayload: {
+      content: `${drafting.headline}\n${drafting.body}\n${drafting.callToAction}`,
+    },
+    runId,
+    sequence,
+    stepId: "qa_agent",
+    toolId: "score_content_quality",
+  });
+  recordToolExecution(contentScoreTool);
+  sequence += 1;
   state = transitionCampaignWorkflowState(state, "qa_completed");
   pushTrace({
     agentId: "qa_agent",
     createdAt: timestampAt(sequence),
     message: "QA agent completed.",
-    metadata: { passed: qa.passed, score: qa.score, state },
+    metadata: {
+      passed: qa.passed,
+      score: qa.score,
+      state,
+      toolScore:
+        typeof contentScoreTool.toolCall.outputPayload?.score === "number"
+          ? contentScoreTool.toolCall.outputPayload.score
+          : qa.score,
+    },
     runId,
     sequence,
     stepId: "qa_agent",
@@ -296,6 +339,7 @@ function runCampaignWorkflowToApprovalGate({
     campaignGoal: normalisedGoal,
     goalSlug,
     traceEvents,
+    toolCalls,
     nextSequence: sequence,
     timestampAt,
     agentOutputs,
@@ -331,6 +375,22 @@ export function runCampaignPublishPackageWorkflow({
   let state: CampaignWorkflowState = "waiting_for_approval";
 
   state = transitionCampaignWorkflowState(state, "approval_required");
+  const blockedPublishTool = executeToolCall({
+    agentId: "approval_agent",
+    createdAt: gateRun.timestampAt(gateRun.nextSequence),
+    inputPayload: {
+      body: finalPublishPackage.body,
+      headline: finalPublishPackage.headline,
+      title: finalPublishPackage.title,
+    },
+    runId: gateRun.runId,
+    sequence: gateRun.nextSequence,
+    stepId: "publish_package",
+    toolId: "create_mock_publish_package",
+  });
+  gateRun.toolCalls.push(blockedPublishTool.toolCall);
+  gateRun.traceEvents.push(blockedPublishTool.traceEvent);
+  gateRun.nextSequence += 1;
   state = transitionCampaignWorkflowState(state, "publish_package_prepared");
   state = transitionCampaignWorkflowState(state, "workflow_completed");
   gateRun.traceEvents.push(
@@ -367,6 +427,7 @@ export function runCampaignPublishPackageWorkflow({
     agentOutputs: gateRun.agentOutputs,
     approvalRequirement: gateRun.approvalRequirement,
     finalPublishPackage,
+    toolCalls: gateRun.toolCalls,
     traceEvents: gateRun.traceEvents,
     evaluationSummary: gateRun.evaluationSummary,
     publicSafetyNote:
@@ -398,29 +459,67 @@ export function runCampaignWorkflowWithApprovalDecision({
   const nextSequence = gateRun.nextSequence;
 
   if (approvalDecision === "approved") {
+    const utmTool = executeToolCall({
+      agentId: "approval_agent",
+      approved: true,
+      createdAt: gateRun.timestampAt(nextSequence),
+      inputPayload: {
+        campaign: gateRun.campaignGoal,
+        medium: "mock-approved-workflow",
+        source: "promptlabtools-showcase",
+      },
+      runId: gateRun.runId,
+      sequence: nextSequence,
+      stepId: "publish_package",
+      toolId: "generate_mock_utm_url",
+    });
+    const publishTool = executeToolCall({
+      agentId: "approval_agent",
+      approved: true,
+      createdAt: gateRun.timestampAt(nextSequence + 1),
+      inputPayload: {
+        body: gateRun.agentOutputs.drafting.body,
+        headline: gateRun.agentOutputs.drafting.headline,
+        title: "Mock Campaign Publish Package",
+        utmUrl:
+          typeof utmTool.toolCall.outputPayload?.url === "string"
+            ? utmTool.toolCall.outputPayload.url
+            : "https://example.test/mock",
+      },
+      runId: gateRun.runId,
+      sequence: nextSequence + 1,
+      stepId: "publish_package",
+      toolId: "create_mock_publish_package",
+    });
     const finalPublishPackage = buildFinalPublishPackage({
       approvalGateId: gateRun.approvalRequirement.gateId,
       campaignGoal: gateRun.campaignGoal,
       goalSlug: gateRun.goalSlug,
       outputs: gateRun.agentOutputs,
     });
+    gateRun.toolCalls.push(utmTool.toolCall, publishTool.toolCall);
+    gateRun.traceEvents.push(utmTool.traceEvent, publishTool.traceEvent);
 
     gateRun.traceEvents.push(
       createTraceEvent({
-        createdAt: gateRun.timestampAt(nextSequence),
+        createdAt: gateRun.timestampAt(nextSequence + 2),
         message: "Human approval approved the mock publish package.",
         metadata: { auditEventId: approvalDecisionResult.auditEvent.id },
         runId: gateRun.runId,
-        sequence: nextSequence,
+        sequence: nextSequence + 2,
         stepId: "approval_gate",
         type: "approval_approved",
       }),
       createTraceEvent({
-        createdAt: gateRun.timestampAt(nextSequence + 1),
+        createdAt: gateRun.timestampAt(nextSequence + 3),
         message: "Workflow completed after approval with a preview-only publish package.",
-        metadata: { packageId: finalPublishPackage.id, workflowAction: approvalDecisionResult.workflowAction },
+        metadata: {
+          packageId: finalPublishPackage.id,
+          publishToolCallId: publishTool.toolCall.toolCallId,
+          workflowAction: approvalDecisionResult.workflowAction,
+        },
         runId: gateRun.runId,
-        sequence: nextSequence + 1,
+        sequence: nextSequence + 3,
         stepId: "publish_package",
         type: "workflow_completed",
       }),
@@ -539,6 +638,7 @@ function createContinuationResult({
     approvalDecisionResult,
     workflowAction: approvalDecisionResult.workflowAction,
     finalPublishPackage,
+    toolCalls: gateRun.toolCalls,
     traceEvents: gateRun.traceEvents,
     evaluationSummary: gateRun.evaluationSummary,
     revisionInstruction,

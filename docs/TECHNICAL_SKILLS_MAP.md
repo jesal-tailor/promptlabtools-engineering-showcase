@@ -25,6 +25,7 @@ This document maps the showcase to the engineering skills it is intended to evid
 | Prompt registry | `src/types/prompt.ts`, `src/lib/mockData/prompts.ts`, `/prompts` |
 | Prompt registry v2 | `src/lib/prompts`, `/prompts/[promptId]`, and prompt API routes |
 | Tool governance | `src/types/tool.ts`, `src/lib/mockData/tools.ts`, `/tools` |
+| Tool execution sandbox | `src/lib/tools`, mock adapters, `/api/tools/execute`, `/tools/[toolId]`, and `/tools/audit` |
 | Evaluation engine shape | `src/types/evaluation.ts`, `src/lib/mockData/evaluations.ts`, `/evaluations` |
 | Evaluation engine v2 | `src/lib/evaluations`, `/evaluations/[evaluationId]`, and regression API routes |
 | Observability traces | Workflow detail pages and `getRecentTraceActivity` in `src/lib/workflowDisplay.ts` |
@@ -41,6 +42,7 @@ This document maps the showcase to the engineering skills it is intended to evid
 | Prompt registry testing | `tests/promptRegistry.test.ts`, `tests/promptRenderer.test.ts`, `tests/promptLifecycle.test.ts`, `tests/promptVersioning.test.ts` |
 | Evaluation testing | `tests/evaluationEngine.test.ts`, `tests/evaluationHistory.test.ts`, `tests/regressionChecks.test.ts`, `tests/mockLlmJudge.test.ts`, `tests/humanFeedback.test.ts` |
 | Stage 5 API testing | `tests/api.promptCompare.test.ts`, `tests/api.evaluationRegression.test.ts` |
+| Tool sandbox testing | `tests/toolRegistry.test.ts`, `tests/toolPermissions.test.ts`, `tests/toolExecutor.test.ts`, `tests/toolAuditLog.test.ts`, `tests/toolAdapters.test.ts`, `tests/api.toolExecute.test.ts`, `tests/workflowToolIntegration.test.ts` |
 | Approval decision testing | `tests/api.approvalDecision.test.ts`, `tests/workflowApprovalContinuation.test.ts` |
 | Fixture integrity testing | `tests/mockData.test.ts` |
 | Display helper testing | `tests/workflowDisplay.test.ts` |
@@ -55,6 +57,7 @@ This document maps the showcase to the engineering skills it is intended to evid
 | Data minimisation | Synthetic workflow traces and sample approval records |
 | Boundary documentation | `README.md`, `docs/SECURITY_AND_PRIVACY.md`, and `docs/SHOWCASE_OVERVIEW.md` |
 | Fail-closed thinking | Mock publish action blocked or rejected without approval |
+| Adapter boundary safety | High-risk and disabled tools are blocked before mock adapter execution |
 
 ## Production Readiness Thinking
 
@@ -65,3 +68,4 @@ This document maps the showcase to the engineering skills it is intended to evid
 | API evolution awareness | README roadmap and API route structure |
 | Observability awareness | Dashboard trace activity and run detail trace records |
 | Quality regression awareness | Deterministic regression checks before prompt or output promotion |
+| Tool execution readiness | Permissioned tool calls, audit events, typed errors, and adapter isolation |
